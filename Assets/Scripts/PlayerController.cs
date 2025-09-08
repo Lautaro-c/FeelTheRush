@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    private float speedMultiplier = 1;
+    public float SpeedMultiplier => speedMultiplier;
     PlayerInput playerInput;
     PlayerInput.MainActions input;
 
@@ -14,7 +16,6 @@ public class PlayerController : MonoBehaviour
 
     [Header("Controller")]
     public float moveSpeed = 7;
-    public float speedMultiplier = 1;
     public float gravity = -9.8f;
     public float jumpHeight = 1.2f;
 
@@ -179,7 +180,7 @@ public class PlayerController : MonoBehaviour
     // ------------------- //
 
     [Header("Attacking")]
-    public float attackDistance = 7f;
+    public float attackDistance = 1.5f;
     public float attackDelay = 0f;
     public float attackSpeed = 0.2f;
     public int attackDamage = 1;
@@ -238,7 +239,7 @@ public class PlayerController : MonoBehaviour
         {
             float angle = Mathf.Lerp(-halfSpread, halfSpread, (float)i / (rayCount - 1));
             Vector3 direction = Quaternion.Euler(0, angle, 0) * cam.transform.forward;
-            if (Physics.Raycast(cam.transform.position, direction, out RaycastHit hit, attackDistance, attackLayer))
+            if (Physics.Raycast(cam.transform.position, direction, out RaycastHit hit, attackDistance * speedMultiplier, attackLayer))
             {
                 HitTarget(hit.point);
                 if (hit.transform.TryGetComponent<Actor>(out Actor T))
