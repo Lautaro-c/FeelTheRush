@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
     private float speedMultiplier = 1;
+    private UnityEvent OnLeftClick;
+
+
     public float SpeedMultiplier => speedMultiplier;
     PlayerInput playerInput;
     PlayerInput.MainActions input;
@@ -49,6 +53,12 @@ public class PlayerController : MonoBehaviour
         Cursor.visible = false;
     }
 
+    private void Start()
+    {
+        OnLeftClick = new UnityEvent();
+        OnLeftClick.AddListener(Attack);
+    }
+
 
     void Update()
     {
@@ -57,7 +67,9 @@ public class PlayerController : MonoBehaviour
 
         // Repeat Inputs
         if(input.Attack.IsPressed())
-        { Attack(); }
+        { 
+            Attack(); 
+        }
 
         SetAnimations();
 
@@ -92,10 +104,14 @@ public class PlayerController : MonoBehaviour
     }
 
     void FixedUpdate() 
-    { MoveInput(input.Movement.ReadValue<Vector2>()); }
+    { 
+        MoveInput(input.Movement.ReadValue<Vector2>()); 
+    }
 
     void LateUpdate() 
-    { LookInput(input.Look.ReadValue<Vector2>()); }
+    { 
+        LookInput(input.Look.ReadValue<Vector2>()); 
+    }
 
     void MoveInput(Vector2 input)
     {
@@ -124,10 +140,14 @@ public class PlayerController : MonoBehaviour
     }
 
     void OnEnable() 
-    { input.Enable(); }
+    { 
+        input.Enable(); 
+    }
 
     void OnDisable()
-    { input.Disable(); }
+    {
+        input.Disable(); 
+    }
 
     void Jump()
     {
@@ -269,4 +289,6 @@ public class PlayerController : MonoBehaviour
     {
         speedMultiplier--;
     }
+
+
 }

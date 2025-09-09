@@ -932,6 +932,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fce74bd34ec6aae4a8a62439c30af2e0, type: 3}
+--- !u!1 &567130439 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1788623314744564116, guid: 0630ddb66c43ce74b926a6ec5e0b0b3e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1788623315645699377}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &668842652
 GameObject:
   m_ObjectHideFlags: 0
@@ -1052,7 +1058,7 @@ GameObject:
   - component: {fileID: 732627796}
   - component: {fileID: 732627795}
   - component: {fileID: 732627794}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Hittable Box (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1571,7 +1577,7 @@ GameObject:
   - component: {fileID: 1132318292}
   - component: {fileID: 1132318291}
   - component: {fileID: 1132318290}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1847,7 +1853,7 @@ GameObject:
   - component: {fileID: 1263905583}
   - component: {fileID: 1263905582}
   - component: {fileID: 1263905581}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Hittable Box
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2017,12 +2023,42 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 1788623315645699377}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 567130439}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 526ed24552cf0d04684295be1f2c8308, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &1361024073 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1788623314744564119, guid: 0630ddb66c43ce74b926a6ec5e0b0b3e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1788623315645699377}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1361024076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567130439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b07967e808b7714c8c217ec7d1e6023, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  wallRunForce: 200
+  maxWallRunTime: 1.5
+  wallRunTimer: 0
+  wallCheckDistance: 0.7
+  minJumpHeight: 0.5
+  orientation: {fileID: 1361024073}
 --- !u!1 &1869271150
 GameObject:
   m_ObjectHideFlags: 0
@@ -2035,7 +2071,7 @@ GameObject:
   - component: {fileID: 1869271154}
   - component: {fileID: 1869271153}
   - component: {fileID: 1869271152}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Hittable Box (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2414,7 +2450,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1788623314744564116, guid: 0630ddb66c43ce74b926a6ec5e0b0b3e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1361024076}
   m_SourcePrefab: {fileID: 100100000, guid: 0630ddb66c43ce74b926a6ec5e0b0b3e, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

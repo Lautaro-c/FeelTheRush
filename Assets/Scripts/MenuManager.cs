@@ -19,9 +19,9 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI back2Txt;
     [SerializeField] private TextMeshProUGUI exitTxt;
     [SerializeField] private TextMeshProUGUI languajeTxt;
-    [SerializeField] private TextMeshProUGUI creditsTo;
-    private int lastLvlPlayed = 0;
+    [SerializeField] private TextMeshProUGUI creditsTo;   
     public bool english;
+    private int lastLvlPlayed = 0;
 
     private void Awake()
     {
