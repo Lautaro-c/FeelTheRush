@@ -22,8 +22,7 @@ public class Actor : MonoBehaviour
 
     void Death()
     {
-        // Death function
-        // TEMPORARY: Destroy Object
+        ScoreManager.Instance?.RegisterKill();
         Destroy(gameObject);
     }
 }
