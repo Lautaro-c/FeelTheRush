@@ -2055,7 +2055,9 @@ MonoBehaviour:
     m_Bits: 128
   wallRunForce: 200
   maxWallRunTime: 1.5
-  wallRunTimer: 0
+  wallRunTimer: 2
+  wallJumpUpForce: 7
+  wallJumpSideForce: 12
   wallCheckDistance: 0.7
   minJumpHeight: 0.5
   orientation: {fileID: 1361024073}

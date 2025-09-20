@@ -23,9 +23,9 @@ public class PlayerController : MonoBehaviour
     public float gravity = -9.8f;
     public float jumpHeight = 1.2f;
 
-    Vector3 _PlayerVelocity;
+    public Vector3 _PlayerVelocity;
 
-    bool isGrounded;
+    public bool isGrounded;
 
     [Header("Camera")]
     public Camera cam;
@@ -289,6 +289,16 @@ public class PlayerController : MonoBehaviour
     {
         speedMultiplier--;
     }
+
+    /*public void DoFOV(float endValue)
+    {
+        GetComponent<Camera>().DOFieldOfView(endValue, 0.25f);
+    }
+
+    public void DoTilting(float zTilt)
+    {
+        transform.DOLocalRotate(new Vector3(0, 0, zTilt), 0.25f);
+    }*/
 
 
 }
