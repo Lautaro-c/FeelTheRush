@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour
     public float sensitivity;
 
     float xRotation = 0f;
+    float zRotation = 0f;
     public float dashSpeed = 10f;
     public float dashDuration = 2f;
     private bool isDashing = false;
@@ -126,7 +127,7 @@ public class PlayerController : MonoBehaviour
         controller.Move(_PlayerVelocity * Time.deltaTime);
     }
 
-    void LookInput(Vector3 input)
+    void LookInput(Vector2 input)
     {
         float mouseX = input.x;
         float mouseY = input.y;
@@ -134,7 +135,7 @@ public class PlayerController : MonoBehaviour
         xRotation -= (mouseY * Time.deltaTime * sensitivity);
         xRotation = Mathf.Clamp(xRotation, -80, 80);
 
-        cam.transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
+        cam.transform.localRotation = Quaternion.Euler(xRotation, 0, zRotation);
 
         transform.Rotate(Vector3.up * (mouseX * Time.deltaTime * sensitivity));
     }
@@ -290,15 +291,15 @@ public class PlayerController : MonoBehaviour
         speedMultiplier--;
     }
 
-    /*public void DoFOV(float endValue)
+    public void TiltCamera(float tiltAmount)
     {
-        GetComponent<Camera>().DOFieldOfView(endValue, 0.25f);
+        if(zRotation < tiltAmount)
+        {
+            zRotation+= 0.5f;
+        }
+        if(zRotation > tiltAmount)
+        {
+            zRotation-= 0.5f;
+        }
     }
-
-    public void DoTilting(float zTilt)
-    {
-        transform.DOLocalRotate(new Vector3(0, 0, zTilt), 0.25f);
-    }*/
-
-
 }

@@ -2057,10 +2057,11 @@ MonoBehaviour:
   maxWallRunTime: 1.5
   wallRunTimer: 2
   wallJumpUpForce: 7
-  wallJumpSideForce: 12
+  wallJumpSideForce: 7
   wallCheckDistance: 0.7
   minJumpHeight: 0.5
   orientation: {fileID: 1361024073}
+  playerCamera: {fileID: 2063869392}
 --- !u!1 &1869271150
 GameObject:
   m_ObjectHideFlags: 0
@@ -2268,6 +2269,12 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2063869392 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1788623315372294390, guid: 0630ddb66c43ce74b926a6ec5e0b0b3e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1788623315645699377}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2092838018
 PrefabInstance:
   m_ObjectHideFlags: 0

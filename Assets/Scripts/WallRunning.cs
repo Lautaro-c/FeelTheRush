@@ -27,8 +27,11 @@ public class WallRunning : MonoBehaviour
     [SerializeField] private Transform orientation;
     private PlayerController pm;
     private CharacterController characterController;
+    [SerializeField] private GameObject playerCamera;
 
     private bool isWallRunning = false;
+    private string wallName;
+    private string lastWallName = "None";
 
     private void Start()
     {
@@ -42,34 +45,38 @@ public class WallRunning : MonoBehaviour
         StateMachine();
         wallRunForce = pm.moveSpeed * pm.SpeedMultiplier;
 
-        if (isWallRunning && Input.GetButtonDown("Jump"))
+        if (isWallRunning && Input.GetButtonDown("Jump") && lastWallName != wallName)
         {
-            /*pm.DoFOV(90f);
-            if (wallLeft) 
-            { 
-                pm.DoTilting(-5f); 
-            }
+            WallJump();
+            lastWallName = wallName;
+        }
+        if(isWallRunning)
+        {
             if (wallLeft)
             {
-                pm.DoTilting(5f);
-            }*/
-            WallJump();
+                pm.TiltCamera(-15f);
+            }
+            if (wallRight)
+            {
+                pm.TiltCamera(15f);
+            }
         }
-        if (pm.isGrounded) // o tu método de detección de suelo
+        else
+        {
+            pm.TiltCamera(0f);
+        }
+        if (pm.isGrounded) // o tu metodo de deteccion de suelo
         {
             // Resetear la velocidad horizontal al aterrizar
             pm._PlayerVelocity.x = 0f;
             pm._PlayerVelocity.z = 0f;
 
-            // Si querés, también podés resetear la vertical si no estás saltando
+            // Si querï¿½s, tambiï¿½n podï¿½s resetear la vertical si no estï¿½s saltando
             if (!Input.GetButton("Jump"))
             {
-                pm._PlayerVelocity.y = -1f; // pequeña fuerza hacia abajo para mantener contacto
+                pm._PlayerVelocity.y = -1f; // pequeï¿½a fuerza hacia abajo para mantener contacto
             }
-
-            //resetear camara
-            //pm.DoFOV(80f);
-            //pm.DoTilting(0f);
+            lastWallName = "None";
         }
     }
 
@@ -101,7 +108,6 @@ public class WallRunning : MonoBehaviour
         // State 1 - Wallrunning
         if((wallLeft || wallRight) && verticalInput > 0 && AboveGround())
         {
-            Debug.Log("We are almost wallrunning");
             isWallRunning = true;
         }
         else
@@ -116,7 +122,7 @@ public class WallRunning : MonoBehaviour
         // Desactivamos gravedad manualmente
         pm.gravity = -2.5f;
 
-        // Calculamos la dirección del wall run
+        // Calculamos la direcciï¿½n del wall run
         Vector3 wallNormal = wallRight ? rightWallHit.normal : leftWallHit.normal;
         Vector3 wallForward = Vector3.Cross(wallNormal, Vector3.up);
 
@@ -125,12 +131,12 @@ public class WallRunning : MonoBehaviour
             wallForward = -wallForward;
         }
 
-        // Aseguramos que la dirección esté alineada con el movimiento del jugador
+        // Aseguramos que la direcciï¿½n estï¿½ alineada con el movimiento del jugador
         if (Vector3.Dot(wallForward, transform.forward) < 0)
         {
             wallForward = -wallForward;
         }
-        // Aplicamos movimiento en la dirección del wall run
+        // Aplicamos movimiento en la direcciï¿½n del wall run
         Vector3 moveDirection = wallForward * wallRunForce;
         moveDirection.y = pm.gravity;
 
@@ -139,12 +145,21 @@ public class WallRunning : MonoBehaviour
 
     private void WallJump()
     {
+        Debug.Log("Salte");
+        if (wallRight)
+        {
+            wallName = "RightWall";
+        }
+        if (wallLeft)
+        {
+            wallName = "LeftWall";
+        }
         Vector3 wallNormal = wallRight ? rightWallHit.normal : leftWallHit.normal;
 
-        // Dirección hacia adelante del jugador, proyectada en el plano horizontal
+        // Direcciï¿½n hacia adelante del jugador, proyectada en el plano horizontal
         Vector3 forwardDirection = new Vector3(transform.forward.x, 0f, transform.forward.z).normalized;
 
-        // Impulso: hacia arriba + en la dirección del jugador + alejándose de la pared
+        // Impulso: hacia arriba + en la direcciï¿½n del jugador + alejï¿½ndose de la pared
         Vector3 inputDirection = orientation.right * horizontalInput;
         Vector3 jumpDirection = transform.up * wallJumpUpForce
                               + inputDirection * wallJumpSideForce
@@ -153,6 +168,5 @@ public class WallRunning : MonoBehaviour
         pm._PlayerVelocity = jumpDirection;
         isWallRunning = false;
     }
-
 }
 
