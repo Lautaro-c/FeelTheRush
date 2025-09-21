@@ -3,15 +3,37 @@ using UnityEngine.Events;
 
 public class meta : MonoBehaviour
 {
-    /*
     public UnityEvent OnWin;
+
     private void Start()
     {
-        OnWin = new UnityEvent();
-        OnWin.AddListener();
+        if (OnWin == null)
+        {
+            OnWin = new UnityEvent();
+        }
+          
+        // Podés agregar listeners desde el inspector o por código:
+        OnWin.AddListener(TriggerWinSequence);
     }
-    public void  OnCollisionEnter(Collision collision)
+
+    private void OnTriggerEnter(Collider other)
     {
-        OnWin.invoke();
-    }*/
+        if (other.CompareTag("Player"))
+        {
+            OnWin.Invoke();
+        }
+    }
+
+
+    private void TriggerWinSequence()
+    {
+        // Accedé al ScoreManager y ejecutá la lógica de fin de nivel
+        if (ScoreManager.Instance != null)
+        {
+            ScoreManager.Instance.playerController.canMove = false;
+            ScoreManager.Instance.EndLevel();
+            ScoreManager.Instance.managerUI.winScreen();
+        }
+    }
+
 }
