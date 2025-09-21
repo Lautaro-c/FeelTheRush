@@ -40,6 +40,7 @@ public class PlayerController : MonoBehaviour
     private float dashTimer = 0f;
     private Vector3 dashDirection;
 
+    [SerializeField] TutorialManager tutorialManager;
 
     void Awake()
     { 
@@ -123,6 +124,8 @@ public class PlayerController : MonoBehaviour
     {
         if (canMove)
         {
+            tutorialManager.OnPlayerMoved();
+            
             Vector3 moveDirection = Vector3.zero;
             moveDirection.x = input.x;
             moveDirection.z = input.y;

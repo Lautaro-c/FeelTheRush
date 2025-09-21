@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ActorsFactory : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class ActorsFactory : MonoBehaviour
         foreach (var actor in actors)
         {
             Debug.Log(actor.name);
-            actorsDictionary.Add(actor.name, actor);
+            actorsDictionary.Add(actor.name, actor); 
         }
     }
 
