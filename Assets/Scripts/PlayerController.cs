@@ -124,8 +124,6 @@ public class PlayerController : MonoBehaviour
     {
         if (canMove)
         {
-            tutorialManager.OnPlayerMoved();
-            
             Vector3 moveDirection = Vector3.zero;
             moveDirection.x = input.x;
             moveDirection.z = input.y;
@@ -316,4 +314,29 @@ public class PlayerController : MonoBehaviour
             zRotation-= 0.5f;
         }
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        switch(other.tag)
+        {
+            case "Movement":
+                tutorialManager.OnPlayerMoved();
+                break;
+            case "Jump":
+                tutorialManager.OnPlayerJump();
+                break;
+            case "WallRunning":
+                tutorialManager.OnPlayerWallRun();
+                break;
+            case "AttackEnemy":
+                tutorialManager.OnPlayerAttackEnemy();
+                break;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        tutorialManager.Desactivate();
+    }
+
 }
