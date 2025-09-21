@@ -1,11 +1,16 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ScoreManager : MonoBehaviour
 {
+    public UIManager managerUI;
     public static ScoreManager Instance;
-
+    public PlayerController playerController;
+    public GameObject wallInvisibity;
     private float levelStartTime;
     private int enemiesKilled;
+    public TMP_Text ScoreText;
 
     public float TimeElapsed => Time.time - levelStartTime;
     public int EnemiesKilled => enemiesKilled;
@@ -36,10 +41,25 @@ public class ScoreManager : MonoBehaviour
     {
         float finalTime = TimeElapsed;
         int totalKills = enemiesKilled;
-
-        Debug.Log($"Nivel terminado en {finalTime:F2} segundos. Enemigos eliminados: {totalKills}");
+        int score = (totalKills * 100) + Mathf.Max(0, (int)(1000 - finalTime * 10));
+        ScoreText.text = "Tiempo: " + finalTime.ToString("F2") + "s"
+                       + "\nEnemigos derrotados: " + totalKills + "\nPuntaje Final: " + score; ;
 
         // Aquí podés guardar los datos, mostrar UI, enviar a leaderboard, etc.
     }
+
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playerController.canMove = false;
+            EndLevel();
+            managerUI.winScreen();
+        }
+    }
+
+
 
 }

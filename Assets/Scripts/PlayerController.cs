@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -9,7 +10,7 @@ public class PlayerController : MonoBehaviour
     private float speedMultiplier = 1;
     private UnityEvent OnLeftClick;
 
-
+    public bool canMove = true;
     public float SpeedMultiplier => speedMultiplier;
     PlayerInput playerInput;
     PlayerInput.MainActions input;
@@ -114,38 +115,48 @@ public class PlayerController : MonoBehaviour
         LookInput(input.Look.ReadValue<Vector2>()); 
     }
 
+
+
+
+
     void MoveInput(Vector2 input)
     {
-        Vector3 moveDirection = Vector3.zero;
-        moveDirection.x = input.x;
-        moveDirection.z = input.y;
+        if (canMove)
+        {
+            Vector3 moveDirection = Vector3.zero;
+            moveDirection.x = input.x;
+            moveDirection.z = input.y;
 
-        controller.Move(transform.TransformDirection(moveDirection) * moveSpeed * speedMultiplier * Time.deltaTime);
-        _PlayerVelocity.y += gravity * Time.deltaTime;
-        if(isGrounded && _PlayerVelocity.y < 0)
-            _PlayerVelocity.y = -2f;
-        controller.Move(_PlayerVelocity * Time.deltaTime);
+            controller.Move(transform.TransformDirection(moveDirection) * moveSpeed * speedMultiplier * Time.deltaTime);
+            _PlayerVelocity.y += gravity * Time.deltaTime;
+            if (isGrounded && _PlayerVelocity.y < 0)
+                _PlayerVelocity.y = -2f;
+            controller.Move(_PlayerVelocity * Time.deltaTime);
+        }
     }
 
     void LookInput(Vector2 input)
     {
-        float mouseX = input.x;
-        float mouseY = input.y;
+        if (canMove)
+        {
+            float mouseX = input.x;
+            float mouseY = input.y;
 
-        xRotation -= (mouseY * Time.deltaTime * sensitivity);
-        xRotation = Mathf.Clamp(xRotation, -80, 80);
+            xRotation -= (mouseY * Time.deltaTime * sensitivity);
+            xRotation = Mathf.Clamp(xRotation, -80, 80);
 
-        cam.transform.localRotation = Quaternion.Euler(xRotation, 0, zRotation);
+            cam.transform.localRotation = Quaternion.Euler(xRotation, 0, zRotation);
 
-        transform.Rotate(Vector3.up * (mouseX * Time.deltaTime * sensitivity));
+            transform.Rotate(Vector3.up * (mouseX * Time.deltaTime * sensitivity));
+        }
     }
 
-    void OnEnable() 
+    public void OnEnable() 
     { 
         input.Enable(); 
     }
 
-    void OnDisable()
+    public void OnDisable()
     {
         input.Disable(); 
     }
