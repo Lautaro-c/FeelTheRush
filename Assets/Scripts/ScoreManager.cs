@@ -47,9 +47,6 @@ public class ScoreManager : MonoBehaviour
 
         // Aquí podés guardar los datos, mostrar UI, enviar a leaderboard, etc.
     }
-
-
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -59,7 +56,4 @@ public class ScoreManager : MonoBehaviour
             managerUI.winScreen();
         }
     }
-
-
-
 }
