@@ -84,9 +84,12 @@ public class PlayerController : MonoBehaviour
         }
         if (Input.GetMouseButtonDown(1) && !isDashing)
         {
-            dashDirection = -cam.transform.forward;
-            dashTimer = dashDuration;
-            isDashing = true;
+            if (canMove)
+            {
+                dashDirection = -cam.transform.forward;
+                dashTimer = dashDuration;
+                isDashing = true;
+            }
         }
 
         if (isDashing)
@@ -158,8 +161,11 @@ public class PlayerController : MonoBehaviour
     void Jump()
     {
         // Adds force to the player rigidbody to jump
-        if (isGrounded)
-            _PlayerVelocity.y = Mathf.Sqrt(jumpHeight * -3.0f * gravity);
+        if (canMove)
+        {
+            if (isGrounded)
+                _PlayerVelocity.y = Mathf.Sqrt(jumpHeight * -3.0f * gravity);
+        }
     }
 
     void AssignInputs()
@@ -227,26 +233,29 @@ public class PlayerController : MonoBehaviour
 
     public void Attack()
     {
-        if(!readyToAttack || attacking) return;
-
-        readyToAttack = false;
-        attacking = true;
-
-        Invoke(nameof(ResetAttack), attackSpeed);
-        Invoke(nameof(AttackRaycast), attackDelay);
-
-        audioSource.pitch = Random.Range(0.9f, 1.1f);
-        audioSource.PlayOneShot(swordSwing);
-
-        if(attackCount == 0)
+        if (canMove)
         {
-            ChangeAnimationState(ATTACK1);
-            attackCount++;
-        }
-        else
-        {
-            ChangeAnimationState(ATTACK2);
-            attackCount = 0;
+            if (!readyToAttack || attacking) return;
+
+            readyToAttack = false;
+            attacking = true;
+
+            Invoke(nameof(ResetAttack), attackSpeed);
+            Invoke(nameof(AttackRaycast), attackDelay);
+
+            audioSource.pitch = Random.Range(0.9f, 1.1f);
+            audioSource.PlayOneShot(swordSwing);
+
+            if (attackCount == 0)
+            {
+                ChangeAnimationState(ATTACK1);
+                attackCount++;
+            }
+            else
+            {
+                ChangeAnimationState(ATTACK2);
+                attackCount = 0;
+            }
         }
     }
 
