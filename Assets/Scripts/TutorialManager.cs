@@ -1,14 +1,8 @@
 using UnityEngine;
-using System.Collections;
 
 public class TutorialManager : MonoBehaviour
 {
     public GameObject[] tutorialPanels; // Asigná los carteles en el inspector
-
-    void Start()
-    {
-        
-    }
 
     public void OnPlayerMoved()
     {
@@ -21,7 +15,6 @@ public class TutorialManager : MonoBehaviour
         HidePanel(0);
         ShowPanel(1); // el jugador salta
         HidePanel(2);
-
     }
 
     public void OnPlayerWallRun()
@@ -29,14 +22,12 @@ public class TutorialManager : MonoBehaviour
         HidePanel(1);
         ShowPanel(2); // el jugador corre en las paredes
         HidePanel(3);
-
     }
 
     public void OnPlayerAttackEnemy()
     {
         HidePanel(2);
         ShowPanel(3); // Cartel de golpear un enemigo
-        
     }
 
     public void Desactivate()

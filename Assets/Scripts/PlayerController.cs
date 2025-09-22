@@ -1,9 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
@@ -115,9 +111,6 @@ public class PlayerController : MonoBehaviour
     { 
         LookInput(input.Look.ReadValue<Vector2>()); 
     }
-
-
-
 
 
     void MoveInput(Vector2 input)
@@ -338,5 +331,4 @@ public class PlayerController : MonoBehaviour
     {
         tutorialManager.Desactivate();
     }
-
 }
