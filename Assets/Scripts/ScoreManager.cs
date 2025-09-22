@@ -42,8 +42,9 @@ public class ScoreManager : MonoBehaviour
         float finalTime = TimeElapsed;
         int totalKills = enemiesKilled;
         int score = (totalKills * 100) + Mathf.Max(0, (int)(1000 - finalTime * 10));
-        ScoreText.text = "Tiempo: " + finalTime.ToString("F2") + "s"
-                       + "\nEnemigos derrotados: " + totalKills + "\nPuntaje Final: " + score; ;
+        ScoreText.text = "Tiempo: " + finalTime.ToString("F2") + "s" + "\nEnemigos derrotados: " + totalKills + "\nPuntaje Final: " + score; 
+
+
 
         // Aquí podés guardar los datos, mostrar UI, enviar a leaderboard, etc.
     }

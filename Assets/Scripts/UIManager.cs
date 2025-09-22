@@ -4,11 +4,13 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] private Image speedCounter;
+    [SerializeField] private GameObject speedCounter;
     [SerializeField] private Sprite[] speedNum;
     [SerializeField] private PlayerController playerController;
+    [SerializeField] private GameObject emptySpeed;
 
     [SerializeField] private Image multiplierBar;
+    
 
     public GameObject panelUI;
 
@@ -25,7 +27,7 @@ public class UIManager : MonoBehaviour
         multiplier = Mathf.Clamp(multiplier, 1, speedNum.Length);
 
         //Elige el sprite
-        speedCounter.sprite = speedNum[multiplier - 1];
+        speedCounter.GetComponent<Image>().sprite = speedNum[multiplier - 1];
 
         if (playerController.SpeedMultiplier > 1)
         {
@@ -44,6 +46,7 @@ public class UIManager : MonoBehaviour
 
     public void winScreen()
     {
+        emptySpeed.SetActive(false);
         panelUI.SetActive(true);
     }
 }

@@ -2610,7 +2610,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b81b60b930c49643b15dfd736525b60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speedCounter: {fileID: 1730132331}
+  speedCounter: {fileID: 1730132329}
   speedNum:
   - {fileID: 21300000, guid: 2945c71adc0b79c4899cc0283686d8b5, type: 3}
   - {fileID: 21300000, guid: b9c2d1831db792848a1112b184a0d30f, type: 3}
@@ -2618,6 +2618,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 239744e232ee09541b3a9301fea0fdb1, type: 3}
   - {fileID: 21300000, guid: 69ea1709f2cbe9e4493962c0f0b63b13, type: 3}
   playerController: {fileID: 1361024072}
+  emptySpeed: {fileID: 839944335}
   multiplierBar: {fileID: 1162967527}
   panelUI: {fileID: 27690032}
 --- !u!4 &761413974
