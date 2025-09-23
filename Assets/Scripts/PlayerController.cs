@@ -61,7 +61,6 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        //Debug.Log(speedMultiplier);
         isGrounded = controller.isGrounded;
 
         // Repeat Inputs
@@ -228,7 +227,7 @@ public class PlayerController : MonoBehaviour
     int attackCount;
 
     [Header("Delay")]
-    public float decrementInterval = 3f; // tiempo entre decrementos
+    public float decrementInterval = 3f;
     public float timeSinceLastDecrement = 0f;
 
 
@@ -268,8 +267,8 @@ public class PlayerController : MonoBehaviour
 
     void AttackRaycast()
     {
-        int rayCount = 5; // Cu疣tos rayos lanzar
-        float angleSpread = 45f; // ﾁngulo total del abanico
+        int rayCount = 5;
+        float angleSpread = 45f;
         float halfSpread = angleSpread / 2f;
         for (int i = 0; i < rayCount; i++)
         {

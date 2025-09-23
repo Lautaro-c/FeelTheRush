@@ -2,32 +2,32 @@ using UnityEngine;
 
 public class TutorialManager : MonoBehaviour
 {
-    public GameObject[] tutorialPanels; // Asigná los carteles en el inspector
+    public GameObject[] tutorialPanels;
 
     public void OnPlayerMoved()
     {
-        ShowPanel(0); // Cartel de moverse con las teclas
+        ShowPanel(0);
         HidePanel(1);
     }
 
     public void OnPlayerJump()
     {
         HidePanel(0);
-        ShowPanel(1); // el jugador salta
+        ShowPanel(1);
         HidePanel(2);
     }
 
     public void OnPlayerWallRun()
     {
         HidePanel(1);
-        ShowPanel(2); // el jugador corre en las paredes
+        ShowPanel(2);
         HidePanel(3);
     }
 
     public void OnPlayerAttackEnemy()
     {
         HidePanel(2);
-        ShowPanel(3); // Cartel de golpear un enemigo
+        ShowPanel(3);
     }
 
     public void Desactivate()

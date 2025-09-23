@@ -1,14 +1,12 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Actor : MonoBehaviour
 {
     int currentHealth;
     public int maxHealth;
-
     public event Action OnDie;
+
     void Awake()
     {
         currentHealth = maxHealth;

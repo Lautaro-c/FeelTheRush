@@ -65,16 +65,15 @@ public class WallRunning : MonoBehaviour
         {
             pm.TiltCamera(0f);
         }
-        if (pm.isGrounded) // o tu metodo de deteccion de suelo
+        if (pm.isGrounded)
         {
             // Resetear la velocidad horizontal al aterrizar
             pm._PlayerVelocity.x = 0f;
             pm._PlayerVelocity.z = 0f;
 
-            // Si quer�s, tambi�n pod�s resetear la vertical si no est�s saltando
             if (!Input.GetButton("Jump"))
             {
-                pm._PlayerVelocity.y = -1f; // peque�a fuerza hacia abajo para mantener contacto
+                pm._PlayerVelocity.y = -1f; // pequeña fuerza hacia abajo para mantener contacto
             }
             lastWallName = "None";
         }
@@ -119,10 +118,10 @@ public class WallRunning : MonoBehaviour
 
     private void WallRunningMovement()
     {
-        // Desactivamos gravedad manualmente
+        // Se desactiva la gravedad manualmente
         pm.gravity = -2.5f;
 
-        // Calculamos la direcci�n del wall run
+        // Se calcula la dirección del wall running
         Vector3 wallNormal = wallRight ? rightWallHit.normal : leftWallHit.normal;
         Vector3 wallForward = Vector3.Cross(wallNormal, Vector3.up);
 
@@ -131,12 +130,12 @@ public class WallRunning : MonoBehaviour
             wallForward = -wallForward;
         }
 
-        // Aseguramos que la direcci�n est� alineada con el movimiento del jugador
+        // Se asegura que la dirección esté alineada a la visión del jugador
         if (Vector3.Dot(wallForward, transform.forward) < 0)
         {
             wallForward = -wallForward;
         }
-        // Aplicamos movimiento en la direcci�n del wall run
+        // Se aplica movimiento en la dirección del wall run
         Vector3 moveDirection = wallForward * wallRunForce;
         moveDirection.y = pm.gravity;
 
@@ -156,10 +155,10 @@ public class WallRunning : MonoBehaviour
         }
         Vector3 wallNormal = wallRight ? rightWallHit.normal : leftWallHit.normal;
 
-        // Direcci�n hacia adelante del jugador, proyectada en el plano horizontal
+        // Dirección hacia adelante del jugador, proyectada en el plano horizontal
         Vector3 forwardDirection = new Vector3(transform.forward.x, 0f, transform.forward.z).normalized;
 
-        // Impulso: hacia arriba + en la direcci�n del jugador + alej�ndose de la pared
+        // Impulso: hacia arriba + en la direcci�n del jugador + alejandose de la pared
         Vector3 inputDirection = orientation.right * horizontalInput;
         Vector3 jumpDirection = transform.up * wallJumpUpForce
                               + inputDirection * wallJumpSideForce
@@ -169,4 +168,3 @@ public class WallRunning : MonoBehaviour
         isWallRunning = false;
     }
 }
-

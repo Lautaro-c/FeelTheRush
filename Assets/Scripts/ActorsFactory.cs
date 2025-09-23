@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class ActorsFactory : MonoBehaviour
 {
@@ -23,7 +22,6 @@ public class ActorsFactory : MonoBehaviour
         {
             return null;
         }
-        Debug.Log("Enemy instantiated");
         return Instantiate(actor);
     }
 

@@ -1,15 +1,13 @@
 using UnityEngine;
-using UnityEngine.Events;
+
 public class CallEvents : MonoBehaviour
 {
     [SerializeField] Actor subjectToObserve;
 
     private void OnDie()
     {
-        Debug.Log("murio");
         Destroy(gameObject);
     }
-
 
     private void Awake()
     {
