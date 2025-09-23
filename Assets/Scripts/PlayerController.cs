@@ -340,4 +340,10 @@ public class PlayerController : MonoBehaviour
     {
         tutorialManager.Desactivate();
     }
+
+    public void FreeTheMouse()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
 }
