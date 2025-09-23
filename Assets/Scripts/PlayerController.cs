@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
 public class PlayerController : MonoBehaviour
@@ -86,7 +86,7 @@ public class PlayerController : MonoBehaviour
         {
             if (canMove)
             {
-                dashDirection = -cam.transform.forward;
+                dashDirection = cam.transform.forward;
                 dashTimer = dashDuration;
                 isDashing = true;
             }
@@ -134,20 +134,21 @@ public class PlayerController : MonoBehaviour
 
     void LookInput(Vector2 input)
     {
-        if (canMove)
-        {
-            float mouseX = input.x;
-            float mouseY = input.y;
+        if (!canMove) return;
 
-            xRotation -= (mouseY * Time.deltaTime * sensitivity);
-            xRotation = Mathf.Clamp(xRotation, -80, 80);
+        float mouseX = input.x * sensitivity;
+        float mouseY = input.y * sensitivity;
 
-            cam.transform.localRotation = Quaternion.Euler(xRotation, 0, zRotation);
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -80f, 80f);
 
-            transform.Rotate(Vector3.up * (mouseX * Time.deltaTime * sensitivity));
-        }
+        // Rotación vertical (pitch) solo en la cámara
+        cam.transform.localRotation =
+            Quaternion.Euler(xRotation, 0f, zRotation);
+
+        // Rotación horizontal (yaw) en el jugador
+        transform.Rotate(Vector3.up * mouseX);
     }
-
     public void OnEnable() 
     { 
         input.Enable(); 
@@ -267,8 +268,8 @@ public class PlayerController : MonoBehaviour
 
     void AttackRaycast()
     {
-        int rayCount = 5; // Cu�ntos rayos lanzar
-        float angleSpread = 45f; // �ngulo total del abanico
+        int rayCount = 5; // Cu疣tos rayos lanzar
+        float angleSpread = 45f; // ﾁngulo total del abanico
         float halfSpread = angleSpread / 2f;
         for (int i = 0; i < rayCount; i++)
         {

@@ -99,8 +99,8 @@ public class MenuManager : MonoBehaviour
             playTxt.text = "Jugar";
             optionsTxt.text = "Opciones";
             creditsTxt.text = "Creditos";
-            backTxt.text = "Menú";
-            back2Txt.text = "Menú";
+            backTxt.text = "Menu";
+            back2Txt.text = "Menu";
             exitTxt.text = "Salir";
             languajeTxt.text = "Lenguaje";
         }

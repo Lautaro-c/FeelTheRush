@@ -7210,6 +7210,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 481995042327841608, guid: 0630ddb66c43ce74b926a6ec5e0b0b3e,
         type: 3}
+      propertyPath: sensitivity
+      value: 0.81
+      objectReference: {fileID: 0}
+    - target: {fileID: 481995042327841608, guid: 0630ddb66c43ce74b926a6ec5e0b0b3e,
+        type: 3}
       propertyPath: dashDuration
       value: 0.3
       objectReference: {fileID: 0}
