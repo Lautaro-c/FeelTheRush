@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
@@ -46,6 +47,12 @@ public class UIManager : MonoBehaviour
     public void winScreen()
     {
         emptySpeed.SetActive(false);
+        playerController.FreeTheMouse();
         panelUI.SetActive(true);
+    }
+
+    public void BackToMenu()
+    {
+        SceneManager.LoadScene(0);
     }
 }
