@@ -213,8 +213,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Attacking")]
     public float attackDistance = 1.5f;
-    public float attackDelay = 0f;
-    public float attackSpeed = 0.2f;
+    public float attackSpeed = 0.4f;
     public int attackDamage = 1;
     public LayerMask attackLayer;
 
@@ -241,7 +240,7 @@ public class PlayerController : MonoBehaviour
             attacking = true;
 
             Invoke(nameof(ResetAttack), attackSpeed);
-            Invoke(nameof(AttackRaycast), attackDelay);
+            AttackRaycast();
 
             audioSource.pitch = Random.Range(0.9f, 1.1f);
             audioSource.PlayOneShot(swordSwing);
