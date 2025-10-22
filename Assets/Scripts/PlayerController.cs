@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     AudioSource audioSource;
 
     [Header("Controller")]
-    public float moveSpeed = 7;
+    public float moveSpeed = 5;
     public float gravity = -9.8f;
     public float jumpHeight = 1.2f;
 
@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour
     private bool isDashing = false;
     private float dashTimer = 0f;
     private Vector3 dashDirection;
+    private float coyoteTiming = 0f;
 
     [SerializeField] TutorialManager tutorialManager;
 
@@ -107,6 +108,14 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate() 
     { 
         MoveInput(input.Movement.ReadValue<Vector2>()); 
+        if (!isGrounded)
+        {
+            coyoteTiming += Time.deltaTime;
+        }
+        else
+        {
+            coyoteTiming = 0f;
+        }
     }
 
     void LateUpdate() 
@@ -126,7 +135,9 @@ public class PlayerController : MonoBehaviour
             controller.Move(transform.TransformDirection(moveDirection) * moveSpeed * speedMultiplier * Time.deltaTime);
             _PlayerVelocity.y += gravity * Time.deltaTime;
             if (isGrounded && _PlayerVelocity.y < 0)
+            {
                 _PlayerVelocity.y = -2f;
+            }
             controller.Move(_PlayerVelocity * Time.deltaTime);
         }
     }
@@ -163,8 +174,10 @@ public class PlayerController : MonoBehaviour
         // Adds force to the player rigidbody to jump
         if (canMove)
         {
-            if (isGrounded)
+            if (isGrounded || coyoteTiming < 0.2f)
+            {
                 _PlayerVelocity.y = Mathf.Sqrt(jumpHeight * -3.0f * gravity);
+            }
         }
     }
 
