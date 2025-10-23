@@ -62,4 +62,10 @@ public class UIManager : MonoBehaviour
         playerController.EncloseTheMouse();
         playerController.gameIsPaused = false;
     }
+
+    public void ResumeMenu()
+    {
+        Time.timeScale = 1f;
+        playerController.gameIsPaused = false;
+    }
 }
