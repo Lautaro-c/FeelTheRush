@@ -1,11 +1,17 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
     private float speedMultiplier = 1;
     private UnityEvent OnLeftClick;
+    [SerializeField] private GameObject pauseMenu;
+    [SerializeField] private Slider sensitivitySlider;
+    [SerializeField] private TMP_InputField sensitivityText;
 
+    public bool gameIsPaused = false;
     public bool canMove = true;
     public float SpeedMultiplier => speedMultiplier;
     PlayerInput playerInput;
@@ -30,11 +36,11 @@ public class PlayerController : MonoBehaviour
 
     float xRotation = 0f;
     float zRotation = 0f;
-    public float dashSpeed = 10f;
+    /*public float dashSpeed = 10f;
     public float dashDuration = 2f;
     private bool isDashing = false;
     private float dashTimer = 0f;
-    private Vector3 dashDirection;
+    private Vector3 dashDirection;*/
     private float coyoteTiming = 0f;
 
     [SerializeField] TutorialManager tutorialManager;
@@ -82,7 +88,7 @@ public class PlayerController : MonoBehaviour
                 timeSinceLastDecrement = 0f;
             }
         }
-        if (Input.GetMouseButtonDown(1) && !isDashing)
+        /*if (Input.GetMouseButtonDown(1) && !isDashing)
         {
             if (canMove)
             {
@@ -101,6 +107,11 @@ public class PlayerController : MonoBehaviour
             {
                 isDashing = false;
             }
+        }*/
+
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            StopGame();
         }
 
     }
@@ -120,7 +131,10 @@ public class PlayerController : MonoBehaviour
 
     void LateUpdate() 
     { 
-        LookInput(input.Look.ReadValue<Vector2>()); 
+        if (!gameIsPaused)
+        {
+            LookInput(input.Look.ReadValue<Vector2>());
+        }
     }
 
 
@@ -357,5 +371,34 @@ public class PlayerController : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+    }
+    
+    public void EncloseTheMouse()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    public void StopGame()
+    {
+        gameIsPaused = true;
+        Time.timeScale = 0f;
+        FreeTheMouse();
+        pauseMenu.SetActive(true);
+    }
+
+    public void UpdateSensitivityFromSlider()
+    {
+        sensitivity = sensitivitySlider.value;
+        sensitivityText.text = sensitivity.ToString();
+    }
+
+    public void UpdateSensitivityFromText()
+    {
+        if (float.TryParse(sensitivityText.text, out float number))
+        {
+            sensitivity = number;
+            sensitivitySlider.value = sensitivity;
+        }
     }
 }

@@ -55,4 +55,11 @@ public class UIManager : MonoBehaviour
     {
         SceneManager.LoadScene(0);
     }
+
+    public void Resume()
+    {
+        Time.timeScale = 1f;
+        playerController.EncloseTheMouse();
+        playerController.gameIsPaused = false;
+    }
 }
