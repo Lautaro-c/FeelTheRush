@@ -10,6 +10,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private Slider sensitivitySlider;
     [SerializeField] private TMP_InputField sensitivityText;
+    [SerializeField] private GameObject speedParticles2;
+    [SerializeField] private GameObject speedParticles3;
+    [SerializeField] private GameObject speedParticles4;
+    [SerializeField] private GameObject speedParticles5;
 
     public bool gameIsPaused = false;
     public bool canMove = true;
@@ -113,7 +117,7 @@ public class PlayerController : MonoBehaviour
         {
             StopGame();
         }
-
+        SpeedEffect();
     }
 
     void FixedUpdate() 
@@ -156,6 +160,42 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void SpeedEffect()
+    {
+        switch(speedMultiplier)
+        {
+            case 2:
+                speedParticles2.SetActive(true);
+                speedParticles3.SetActive(false);
+                speedParticles4.SetActive(false);
+                speedParticles5.SetActive(false);
+                break;
+            case 3:
+                speedParticles2.SetActive(false);
+                speedParticles3.SetActive(true);
+                speedParticles4.SetActive(false);
+                speedParticles5.SetActive(false);
+                break;
+            case 4:
+                speedParticles2.SetActive(false);
+                speedParticles3.SetActive(false);
+                speedParticles4.SetActive(true);
+                speedParticles5.SetActive(false);
+                break;
+            case 5:
+                speedParticles2.SetActive(false);
+                speedParticles3.SetActive(false);
+                speedParticles4.SetActive(false);
+                speedParticles5.SetActive(true);
+                break;
+            default:
+                speedParticles2.SetActive(false);
+                speedParticles3.SetActive(false);
+                speedParticles4.SetActive(false);
+                speedParticles5.SetActive(false);
+                break;
+        }
+    }
     void LookInput(Vector2 input)
     {
         if (!canMove) return;
