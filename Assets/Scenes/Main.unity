@@ -64500,6 +64500,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 481995042327841608, guid: 0630ddb66c43ce74b926a6ec5e0b0b3e,
         type: 3}
+      propertyPath: moveSpeed
+      value: 6.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 481995042327841608, guid: 0630ddb66c43ce74b926a6ec5e0b0b3e,
+        type: 3}
       propertyPath: pauseMenu
       value: 
       objectReference: {fileID: 1726473066}

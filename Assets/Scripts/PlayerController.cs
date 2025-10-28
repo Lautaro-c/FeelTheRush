@@ -149,8 +149,8 @@ public class PlayerController : MonoBehaviour
             Vector3 moveDirection = Vector3.zero;
             moveDirection.x = input.x;
             moveDirection.z = input.y;
-
-            controller.Move(transform.TransformDirection(moveDirection) * moveSpeed * speedMultiplier * Time.deltaTime);
+            moveSpeed = 6.25f + (speedMultiplier * 3.75f);
+            controller.Move(transform.TransformDirection(moveDirection) * moveSpeed * Time.deltaTime);
             _PlayerVelocity.y += gravity * Time.deltaTime;
             if (isGrounded && _PlayerVelocity.y < 0)
             {
