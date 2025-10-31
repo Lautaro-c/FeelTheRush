@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    private float speedMultiplier = 1;
+    [SerializeField] private float speedMultiplier = 1;
     private UnityEvent OnLeftClick;
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private Slider sensitivitySlider;
