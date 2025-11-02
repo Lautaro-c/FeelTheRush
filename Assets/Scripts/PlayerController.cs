@@ -18,6 +18,8 @@ public class PlayerController : MonoBehaviour
 
     public bool gameIsPaused = false;
     public bool canMove = true;
+    private bool isMoving;
+    public bool hasWon = false;
     public float SpeedMultiplier => speedMultiplier;
     PlayerInput playerInput;
     PlayerInput.MainActions input;
@@ -121,7 +123,10 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            StopGame();
+            if (!hasWon)
+            {
+                StopGame();
+            }
         }
         SpeedEffect();
     }
@@ -155,6 +160,7 @@ public class PlayerController : MonoBehaviour
             Vector3 moveDirection = Vector3.zero;
             moveDirection.x = input.x;
             moveDirection.z = input.y;
+            isMoving = moveDirection.magnitude > 0.1f;
             moveSpeed = 6.25f + (speedMultiplier * 3.75f);
             controller.Move(transform.TransformDirection(moveDirection) * moveSpeed * Time.deltaTime);
             _PlayerVelocity.y += gravity * Time.deltaTime;
@@ -164,11 +170,23 @@ public class PlayerController : MonoBehaviour
             }
             controller.Move(_PlayerVelocity * Time.deltaTime);
         }
+        else
+        {
+            isMoving = false;
+        }
     }
 
     private void SpeedEffect()
     {
-        switch(speedMultiplier)
+        if (!isMoving)
+        {
+            speedParticles2.SetActive(false);
+            speedParticles3.SetActive(false);
+            speedParticles4.SetActive(false);
+            speedParticles5.SetActive(false);
+            return;
+        }
+        switch (speedMultiplier)
         {
             case 2:
                 speedParticles2.SetActive(true);

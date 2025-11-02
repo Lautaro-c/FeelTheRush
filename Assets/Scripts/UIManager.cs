@@ -49,6 +49,8 @@ public class UIManager : MonoBehaviour
         emptySpeed.SetActive(false);
         playerController.FreeTheMouse();
         panelUI.SetActive(true);
+        playerController.hasWon = true;
+
     }
 
     public void BackToMenu()
