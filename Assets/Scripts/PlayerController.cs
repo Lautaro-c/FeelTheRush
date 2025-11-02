@@ -1,6 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
@@ -113,7 +114,12 @@ public class PlayerController : MonoBehaviour
             }
         }*/
 
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            SceneManager.LoadScene(1);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             StopGame();
         }
@@ -398,6 +404,9 @@ public class PlayerController : MonoBehaviour
                 break;
             case "AttackEnemy":
                 tutorialManager.OnPlayerAttackEnemy();
+                break;
+            case "ResetSpeed":
+                speedMultiplier = 1;
                 break;
         }
     }
