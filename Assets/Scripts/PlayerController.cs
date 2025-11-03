@@ -464,8 +464,23 @@ public class PlayerController : MonoBehaviour
     {
         if (float.TryParse(sensitivityText.text, out float number))
         {
-            sensitivity = number;
-            sensitivitySlider.value = sensitivity;
+            if (number >= 0.01 && number <= 1)
+            {
+                sensitivity = number;
+                sensitivitySlider.value = sensitivity;
+            }
+            else if(number < 0.01)
+            {
+                sensitivity = 0.01f;
+                sensitivitySlider.value = sensitivity;
+                sensitivityText.text = sensitivity.ToString();
+            }
+            else if (number > 1)
+            {
+                sensitivity = 1f;
+                sensitivitySlider.value = sensitivity;
+                sensitivityText.text = sensitivity.ToString();
+            }
         }
     }
 }
