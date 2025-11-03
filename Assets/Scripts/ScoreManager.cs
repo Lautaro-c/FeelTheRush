@@ -11,6 +11,8 @@ public class ScoreManager : MonoBehaviour
     private float levelStartTime;
     private int enemiesKilled;
     public TMP_Text ScoreText;
+    public TMP_Text TimeText;
+    public TMP_Text EnemiesText;
     [SerializeField] private GameObject panel;
 
     public float TimeElapsed => Time.time - levelStartTime;
@@ -44,7 +46,9 @@ public class ScoreManager : MonoBehaviour
         int totalKills = enemiesKilled;
         int score = (totalKills * 100) + Mathf.Max(0, (int)(1000 - finalTime * 10));
         panel.SetActive(true);
-        ScoreText.text = "Tiempo: " + finalTime.ToString("F2") + "s" + "\nEnemigos derrotados: " + totalKills + "\nPuntaje Final: " + score; 
+        ScoreText.text = score.ToString();
+        TimeText.text = finalTime.ToString("F2");
+        EnemiesText.text = totalKills.ToString();
     }
     private void OnTriggerEnter(Collider other)
     {
