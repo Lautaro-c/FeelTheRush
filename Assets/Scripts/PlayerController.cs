@@ -178,7 +178,7 @@ public class PlayerController : MonoBehaviour
 
     private void SpeedEffect()
     {
-        if (!isMoving)
+        if (isGrounded && !isMoving)
         {
             speedParticles2.SetActive(false);
             speedParticles3.SetActive(false);
