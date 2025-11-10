@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 public class Actor : MonoBehaviour
-{
+{//
     int currentHealth;
     public int maxHealth;
     public event Action OnDie;
