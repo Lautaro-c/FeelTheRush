@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Diagnostics;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -309,7 +310,7 @@ public class PlayerController : MonoBehaviour
     // ------------------- //
 
     [Header("Attacking")]
-    public float attackDistance = 1.5f;
+    private float attackDistance = 3f;
     public float attackSpeed = 0.4f;
     public int attackDamage = 1;
     public LayerMask attackLayer;
@@ -366,16 +367,29 @@ public class PlayerController : MonoBehaviour
         int rayCount = 5;
         float angleSpread = 45f;
         float halfSpread = angleSpread / 2f;
-        float attackDistanceMultiplier = speedMultiplier;
-        if (speedMultiplier > 1)
+        switch (speedMultiplier)
         {
-            attackDistanceMultiplier = speedMultiplier * 0.5f;
+            case 1:
+                attackDistance = 3;
+                break;
+            case 2:
+                attackDistance = 4.125f;
+                break;
+            case 3:
+                attackDistance = 5.25f;
+                break;
+            case 4:
+                attackDistance = 6.375f;
+                break;
+            case 5:
+                attackDistance = 7.5f;
+                break;
         }
         for (int i = 0; i < rayCount; i++)
         {
             float angle = Mathf.Lerp(-halfSpread, halfSpread, (float)i / (rayCount - 1));
             Vector3 direction = Quaternion.Euler(0, angle, 0) * cam.transform.forward;
-            if (Physics.Raycast(cam.transform.position, direction, out RaycastHit hit, attackDistance * attackDistanceMultiplier, attackLayer))
+            if (Physics.Raycast(cam.transform.position, direction, out RaycastHit hit, attackDistance, attackLayer))
             {
                 HitTarget(hit.point);
                 if (hit.transform.TryGetComponent<Actor>(out Actor T))

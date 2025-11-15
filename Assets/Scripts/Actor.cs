@@ -72,13 +72,4 @@ public class Actor : MonoBehaviour
     {
         GameObject.Destroy(this.gameObject);
     }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other != null && other.GetComponent<PlayerController>())
-        {
-            enemyAnimator.SetTrigger("PlayerSeen");
-        }
-    }
-
 }

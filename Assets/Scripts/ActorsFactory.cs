@@ -11,7 +11,6 @@ public class ActorsFactory : MonoBehaviour
         actorsDictionary = new Dictionary<string, Actor>();
         foreach (var actor in actors)
         {
-            Debug.Log(actor.name);
             actorsDictionary.Add(actor.name, actor); 
         }
     }

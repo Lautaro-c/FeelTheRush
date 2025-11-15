@@ -144,7 +144,6 @@ public class WallRunning : MonoBehaviour
 
     private void WallJump()
     {
-        Debug.Log("Salte");
         if (wallRight)
         {
             wallName = "RightWall";
