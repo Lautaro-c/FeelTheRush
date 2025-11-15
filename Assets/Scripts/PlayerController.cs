@@ -71,14 +71,11 @@ public class PlayerController : MonoBehaviour
         OnLeftClick = new UnityEvent();
         OnLeftClick.AddListener(Attack);
 
-        // Carga la sensibilidad si existe guardada
-        if (PlayerPrefs.HasKey("Sensitivity"))
-        {
-            sensitivity = PlayerPrefs.GetFloat("Sensitivity");
+        sensitivity = PlayerPrefs.GetFloat("Sensitivity", 0.3f);
 
-            sensitivitySlider.value = sensitivity;
-            sensitivityText.text = sensitivity.ToString();
-        }
+
+        sensitivitySlider.value = sensitivity;
+        sensitivityText.text = sensitivity.ToString();
     }
 
 
@@ -510,10 +507,5 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnApplicationQuit()
-    {
-        // Resetea la sensibilidad al valor por defecto
-        PlayerPrefs.SetFloat("Sensitivity", 0.3f);
-        PlayerPrefs.Save();
-    }
+    
 }

@@ -50,7 +50,7 @@ public class ScoreManager : MonoBehaviour
         TimeText.text = finalTime.ToString("F2");
         EnemiesText.text = totalKills.ToString();
     }
-    private void OnTriggerEnter(Collider other)
+    /*private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
@@ -58,5 +58,5 @@ public class ScoreManager : MonoBehaviour
             EndLevel();
             managerUI.winScreen();
         }
-    }
+    }*/
 }
