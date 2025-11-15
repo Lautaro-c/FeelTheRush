@@ -70,6 +70,15 @@ public class PlayerController : MonoBehaviour
     {
         OnLeftClick = new UnityEvent();
         OnLeftClick.AddListener(Attack);
+
+        // Carga la sensibilidad si existe guardada
+        if (PlayerPrefs.HasKey("Sensitivity"))
+        {
+            sensitivity = PlayerPrefs.GetFloat("Sensitivity");
+
+            sensitivitySlider.value = sensitivity;
+            sensitivityText.text = sensitivity.ToString();
+        }
     }
 
 
@@ -463,6 +472,9 @@ public class PlayerController : MonoBehaviour
     {
         sensitivity = sensitivitySlider.value;
         sensitivityText.text = sensitivity.ToString();
+
+        PlayerPrefs.SetFloat("Sensitivity", sensitivity);   // <<< Guarda el valor
+        PlayerPrefs.Save();   // <<< Fuerza guardado
     }
 
     public void UpdateSensitivityFromText()
@@ -473,19 +485,35 @@ public class PlayerController : MonoBehaviour
             {
                 sensitivity = number;
                 sensitivitySlider.value = sensitivity;
+
+                PlayerPrefs.SetFloat("Sensitivity", sensitivity);
+                PlayerPrefs.Save();
             }
             else if(number < 0.01)
             {
                 sensitivity = 0.01f;
                 sensitivitySlider.value = sensitivity;
                 sensitivityText.text = sensitivity.ToString();
+
+                PlayerPrefs.SetFloat("Sensitivity", sensitivity);
+                PlayerPrefs.Save();
             }
             else if (number > 1)
             {
                 sensitivity = 1f;
                 sensitivitySlider.value = sensitivity;
                 sensitivityText.text = sensitivity.ToString();
+
+                PlayerPrefs.SetFloat("Sensitivity", sensitivity);
+                PlayerPrefs.Save();
             }
         }
+    }
+
+    private void OnApplicationQuit()
+    {
+        // Resetea la sensibilidad al valor por defecto
+        PlayerPrefs.SetFloat("Sensitivity", 0.3f);
+        PlayerPrefs.Save();
     }
 }
