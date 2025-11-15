@@ -360,11 +360,16 @@ public class PlayerController : MonoBehaviour
         int rayCount = 5;
         float angleSpread = 45f;
         float halfSpread = angleSpread / 2f;
+        float attackDistanceMultiplier = speedMultiplier;
+        if (speedMultiplier > 1)
+        {
+            attackDistanceMultiplier = speedMultiplier * 0.5f;
+        }
         for (int i = 0; i < rayCount; i++)
         {
             float angle = Mathf.Lerp(-halfSpread, halfSpread, (float)i / (rayCount - 1));
             Vector3 direction = Quaternion.Euler(0, angle, 0) * cam.transform.forward;
-            if (Physics.Raycast(cam.transform.position, direction, out RaycastHit hit, attackDistance * speedMultiplier, attackLayer))
+            if (Physics.Raycast(cam.transform.position, direction, out RaycastHit hit, attackDistance * attackDistanceMultiplier, attackLayer))
             {
                 HitTarget(hit.point);
                 if (hit.transform.TryGetComponent<Actor>(out Actor T))
