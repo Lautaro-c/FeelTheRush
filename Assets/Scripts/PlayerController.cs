@@ -521,5 +521,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void RestartSpeed()
+    {
+        speedMultiplier = 1f;
+    }
     
 }

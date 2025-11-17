@@ -9,7 +9,7 @@ public class ScoreManager : MonoBehaviour
     public PlayerController playerController;
     public GameObject wallInvisibity;
     private float levelStartTime;
-    private int enemiesKilled;
+    public int enemiesKilled;
     public TMP_Text ScoreText;
     public TMP_Text TimeText;
     public TMP_Text EnemiesText;

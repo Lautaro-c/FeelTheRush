@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Actor : MonoBehaviour
 {
+    [SerializeField] private Vector3 originalPosition;
     int currentHealth;
     public int maxHealth;
     public event Action OnDie;
@@ -33,9 +34,9 @@ public class Actor : MonoBehaviour
     {
         currentHealth -= amount;
 
-        if(currentHealth <= 0)
-        { 
-            Death(); 
+        if (currentHealth <= 0)
+        {
+            Death();
         }
     }
 
@@ -70,6 +71,27 @@ public class Actor : MonoBehaviour
 
     private void DestroyEnemy()
     {
-        GameObject.Destroy(this.gameObject);
+        this.gameObject.SetActive(false);
+    }
+
+    public void RestartEnemy()
+    {
+        currentHealth = maxHealth;
+        if (enemyRb != null)
+        {
+            enemyRb.linearVelocity = Vector3.zero;
+            enemyRb.angularVelocity = Vector3.zero;
+            enemyRb.useGravity = false;
+        }
+        if (enemyCc != null)
+        {
+            enemyCc.isTrigger = false;
+        }
+        if (enemyAnimator != null)
+        {
+            enemyAnimator.ResetTrigger("EnemyDied");
+        }
+        transform.position = originalPosition;
+        gameObject.SetActive(true);
     }
 }
