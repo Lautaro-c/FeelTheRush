@@ -12,10 +12,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private Slider sensitivitySlider;
     [SerializeField] private TMP_InputField sensitivityText;
-    [SerializeField] private GameObject speedParticles2;
-    [SerializeField] private GameObject speedParticles3;
-    [SerializeField] private GameObject speedParticles4;
-    [SerializeField] private GameObject speedParticles5;
+    [SerializeField] private ParticleSystem speedParticles;
 
     public bool gameIsPaused = false;
     public bool canMove = true;
@@ -185,46 +182,44 @@ public class PlayerController : MonoBehaviour
 
     private void SpeedEffect()
     {
+        if (speedParticles == null || !speedParticles.gameObject.activeInHierarchy)
+            return;
+
         if (isGrounded && !isMoving)
         {
-            speedParticles2.SetActive(false);
-            speedParticles3.SetActive(false);
-            speedParticles4.SetActive(false);
-            speedParticles5.SetActive(false);
+            if (speedParticles.isPlaying)
+            {
+                speedParticles.Stop(false);
+            }
             return;
         }
-        switch (speedMultiplier)
+        if (speedParticles.isPlaying && speedParticles.gameObject.activeInHierarchy)
         {
-            case 2:
-                speedParticles2.SetActive(true);
-                speedParticles3.SetActive(false);
-                speedParticles4.SetActive(false);
-                speedParticles5.SetActive(false);
-                break;
-            case 3:
-                speedParticles2.SetActive(false);
-                speedParticles3.SetActive(true);
-                speedParticles4.SetActive(false);
-                speedParticles5.SetActive(false);
-                break;
-            case 4:
-                speedParticles2.SetActive(false);
-                speedParticles3.SetActive(false);
-                speedParticles4.SetActive(true);
-                speedParticles5.SetActive(false);
-                break;
-            case 5:
-                speedParticles2.SetActive(false);
-                speedParticles3.SetActive(false);
-                speedParticles4.SetActive(false);
-                speedParticles5.SetActive(true);
-                break;
-            default:
-                speedParticles2.SetActive(false);
-                speedParticles3.SetActive(false);
-                speedParticles4.SetActive(false);
-                speedParticles5.SetActive(false);
-                break;
+            var mainModule = speedParticles.main;
+
+            switch (speedMultiplier)
+            {
+                case 1:
+                    speedParticles.Stop(false);
+                    break;
+                case 2:
+                    mainModule.simulationSpeed = 1;
+                    break;
+                case 3:
+                    mainModule.simulationSpeed = 2;
+                    break;
+                case 4:
+                    mainModule.simulationSpeed = 3;
+                    break;
+                case 5:
+                    mainModule.simulationSpeed = 4;
+                    break;
+            }
+        }
+
+        if (speedMultiplier >= 2 && !speedParticles.isPlaying)
+        {
+            speedParticles.Play();
         }
     }
     void LookInput(Vector2 input)
