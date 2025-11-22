@@ -12,7 +12,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private Slider sensitivitySlider;
     [SerializeField] private TMP_InputField sensitivityText;
-    [SerializeField] private ParticleSystem speedParticles;
 
     public bool gameIsPaused = false;
     public bool canMove = true;
@@ -49,6 +48,8 @@ public class PlayerController : MonoBehaviour
     private float coyoteTiming = 0f;
 
     [SerializeField] TutorialManager tutorialManager;
+    [SerializeField] private Renderer speedEffectRenderer;
+    [SerializeField] private float scrollSpeed = 1f;
 
     void Awake()
     { 
@@ -135,7 +136,22 @@ public class PlayerController : MonoBehaviour
         SpeedEffect();
     }
 
-    void FixedUpdate() 
+    private void SpeedEffect()
+    {
+        if (speedMultiplier >= 2)
+        {
+            speedEffectRenderer.enabled = true;
+
+            float offset = Time.time * scrollSpeed * speedMultiplier;
+            speedEffectRenderer.material.SetTextureOffset("_MainTex", new Vector2(0, offset));
+        }
+        else
+        {
+            speedEffectRenderer.enabled = false;
+        }
+    }
+
+void FixedUpdate() 
     { 
         MoveInput(input.Movement.ReadValue<Vector2>()); 
         if (!isGrounded)
@@ -177,49 +193,6 @@ public class PlayerController : MonoBehaviour
         else
         {
             isMoving = false;
-        }
-    }
-
-    private void SpeedEffect()
-    {
-        if (speedParticles == null || !speedParticles.gameObject.activeInHierarchy)
-            return;
-
-        if (isGrounded && !isMoving)
-        {
-            if (speedParticles.isPlaying)
-            {
-                speedParticles.Stop(false);
-            }
-            return;
-        }
-        if (speedParticles.isPlaying && speedParticles.gameObject.activeInHierarchy)
-        {
-            var mainModule = speedParticles.main;
-
-            switch (speedMultiplier)
-            {
-                case 1:
-                    speedParticles.Stop(false);
-                    break;
-                case 2:
-                    mainModule.simulationSpeed = 1;
-                    break;
-                case 3:
-                    mainModule.simulationSpeed = 2;
-                    break;
-                case 4:
-                    mainModule.simulationSpeed = 3;
-                    break;
-                case 5:
-                    mainModule.simulationSpeed = 4;
-                    break;
-            }
-        }
-
-        if (speedMultiplier >= 2 && !speedParticles.isPlaying)
-        {
-            speedParticles.Play();
         }
     }
     void LookInput(Vector2 input)
@@ -299,6 +272,7 @@ public class PlayerController : MonoBehaviour
             { ChangeAnimationState(WALK); }
         }
     }
+
 
     // ------------------- //
     // ATTACKING BEHAVIOUR //
