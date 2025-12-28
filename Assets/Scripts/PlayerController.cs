@@ -1,9 +1,11 @@
-﻿using System.Diagnostics;
+﻿using System.Collections;
+//using System.Diagnostics;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static UnityEngine.LightAnchor;
 
 public class PlayerController : MonoBehaviour
 {
@@ -40,16 +42,15 @@ public class PlayerController : MonoBehaviour
 
     float xRotation = 0f;
     float zRotation = 0f;
-    /*public float dashSpeed = 10f;
-    public float dashDuration = 2f;
-    private bool isDashing = false;
-    private float dashTimer = 0f;
-    private Vector3 dashDirection;*/
     private float coyoteTiming = 0f;
 
     [SerializeField] TutorialManager tutorialManager;
     [SerializeField] private Renderer speedEffectRenderer;
     [SerializeField] private float scrollSpeed = 1f;
+
+    private bool isWallJumping = false;
+
+
 
     void Awake()
     { 
@@ -100,26 +101,6 @@ public class PlayerController : MonoBehaviour
                 timeSinceLastDecrement = 0f;
             }
         }
-        /*if (Input.GetMouseButtonDown(1) && !isDashing)
-        {
-            if (canMove)
-            {
-                dashDirection = cam.transform.forward;
-                dashTimer = dashDuration;
-                isDashing = true;
-            }
-        }
-
-        if (isDashing)
-        {
-            controller.Move(dashDirection * dashSpeed * Time.deltaTime);
-            dashTimer -= Time.deltaTime;
-
-            if (dashTimer <= 0f)
-            {
-                isDashing = false;
-            }
-        }*/
 
         if (Input.GetKeyDown(KeyCode.R))
         {
@@ -177,12 +158,15 @@ void FixedUpdate()
     {
         if (canMove)
         {
-            Vector3 moveDirection = Vector3.zero;
-            moveDirection.x = input.x;
-            moveDirection.z = input.y;
-            isMoving = moveDirection.magnitude > 0.1f;
-            moveSpeed = 6.25f + (speedMultiplier * 3.75f);
-            controller.Move(transform.TransformDirection(moveDirection) * moveSpeed * Time.deltaTime);
+            if (!isWallJumping)
+            {
+                Vector3 moveDirection = Vector3.zero;
+                moveDirection.x = input.x;
+                moveDirection.z = input.y;
+                isMoving = moveDirection.magnitude > 0.1f;
+                moveSpeed = 6.25f + (speedMultiplier * 3.75f);
+                controller.Move(transform.TransformDirection(moveDirection) * moveSpeed * Time.deltaTime);
+            }
             _PlayerVelocity.y += gravity * Time.deltaTime;
             if (isGrounded && _PlayerVelocity.y < 0)
             {
@@ -232,6 +216,17 @@ void FixedUpdate()
                 _PlayerVelocity.y = Mathf.Sqrt(jumpHeight * -3.0f * gravity);
             }
         }
+    }
+
+    public IEnumerator StartWallJump(Vector3 jumpDirection)
+    {
+        isWallJumping = true;
+        Vector3 originalPlayerVelocity = _PlayerVelocity;
+        _PlayerVelocity = jumpDirection;
+        yield return new WaitForSeconds(0.5f);
+        _PlayerVelocity.x = originalPlayerVelocity.x;
+        _PlayerVelocity.z = originalPlayerVelocity.z;
+        isWallJumping = false;
     }
 
     void AssignInputs()

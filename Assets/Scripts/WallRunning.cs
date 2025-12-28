@@ -1,3 +1,5 @@
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class WallRunning : MonoBehaviour
@@ -6,8 +8,6 @@ public class WallRunning : MonoBehaviour
     [SerializeField] private LayerMask wallLayer;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float wallRunForce;
-    [SerializeField] private float maxWallRunTime;
-    [SerializeField] private float wallRunTimer;
     [SerializeField] private float wallJumpUpForce;
     [SerializeField] private float wallJumpSideForce;
 
@@ -45,8 +45,20 @@ public class WallRunning : MonoBehaviour
         StateMachine();
         wallRunForce = pm.moveSpeed * pm.SpeedMultiplier;
 
-        if (isWallRunning && Input.GetButtonDown("Jump") && lastWallName != wallName)
+        if (isWallRunning && Input.GetButtonDown("Jump"))
         {
+            CheckForWall();
+            if (wallRight)
+            {
+                wallName = "RightWall";
+            }
+            if (wallLeft)
+            {
+                wallName = "LeftWall";
+            }
+            if (lastWallName != wallName)
+            {
+            }
             WallJump();
             lastWallName = wallName;
         }
@@ -104,6 +116,7 @@ public class WallRunning : MonoBehaviour
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
+
         // State 1 - Wallrunning
         if((wallLeft || wallRight) && verticalInput > 0 && AboveGround())
         {
@@ -114,7 +127,14 @@ public class WallRunning : MonoBehaviour
             pm.gravity = -9.8f;
             isWallRunning = false;
         }
+        //Debug.Log(pm.gravity);
     }
+
+    /*private void WallFriction()
+    {
+        pm.gravity = Mathf.MoveTowards(pm.gravity, -9.8f, 2 * Time.deltaTime);
+    }*/
+
 
     private void WallRunningMovement()
     {
@@ -144,26 +164,15 @@ public class WallRunning : MonoBehaviour
 
     private void WallJump()
     {
-        if (wallRight)
-        {
-            wallName = "RightWall";
-        }
-        if (wallLeft)
-        {
-            wallName = "LeftWall";
-        }
         Vector3 wallNormal = wallRight ? rightWallHit.normal : leftWallHit.normal;
 
         // Dirección hacia adelante del jugador, proyectada en el plano horizontal
         Vector3 forwardDirection = new Vector3(transform.forward.x, 0f, transform.forward.z).normalized;
 
-        // Impulso: hacia arriba + en la direcci�n del jugador + alejandose de la pared
         Vector3 inputDirection = orientation.right * horizontalInput;
-        Vector3 jumpDirection = transform.up * wallJumpUpForce
-                              + inputDirection * wallJumpSideForce
-                              + wallNormal * wallJumpSideForce * 0.5f;
-
-        pm._PlayerVelocity = jumpDirection;
+        //                      inpulso vertical                impulso lateral                       //Empuje desde la pared
+        Vector3 jumpDirection = transform.up * wallJumpUpForce + inputDirection * wallJumpSideForce + wallNormal * wallJumpSideForce * 1.5f;
+        StartCoroutine(pm.StartWallJump(jumpDirection));
         isWallRunning = false;
     }
 }
