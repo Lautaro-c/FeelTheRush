@@ -9,6 +9,8 @@ TagManager:
   - WallRunning
   - AttackEnemy
   - ResetSpeed
+  - Enemy
+  - EnemyHead
   layers:
   - Default
   - TransparentFX

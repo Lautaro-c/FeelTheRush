@@ -14,6 +14,8 @@ public class Actor : MonoBehaviour
     private float force = 50f;
     private Rigidbody enemyRb;
     private CapsuleCollider enemyCc;
+    // 0 = normal || 1 = Goomba
+    private int killType = 0; 
 
     void Awake()
     {
@@ -30,10 +32,10 @@ public class Actor : MonoBehaviour
         enemyCc = this.GetComponent<CapsuleCollider>();
     }
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(int amount, int AttackType)
     {
         currentHealth -= amount;
-
+        killType = AttackType;
         if (currentHealth <= 0)
         {
             Death();
@@ -60,12 +62,26 @@ public class Actor : MonoBehaviour
 
     private void SendEnemyFlying()
     {
-        if (enemyRb != null && cameraTransform != null && enemyCc != null)
+        switch (killType)
         {
-            enemyCc.isTrigger = true;
-            enemyRb.useGravity = true;
-            Vector3 shootDirection = cameraTransform.forward;
-            enemyRb.AddForce(shootDirection.normalized * force, ForceMode.Impulse);
+            case 0:
+                if (enemyRb != null && cameraTransform != null && enemyCc != null)
+                {
+                    enemyCc.isTrigger = true;
+                    enemyRb.useGravity = true;
+                    Vector3 shootDirection = cameraTransform.forward;
+                    enemyRb.AddForce(shootDirection.normalized * force, ForceMode.Impulse);
+                }
+                break;
+            case 1:
+                if (enemyRb != null && enemyCc != null)
+                {
+                    enemyCc.isTrigger = true;
+                    enemyRb.useGravity = true;
+                    Vector3 shootDirection = -transform.up;
+                    enemyRb.AddForce(shootDirection.normalized * force, ForceMode.Impulse);
+                }
+                break;
         }
     }
 

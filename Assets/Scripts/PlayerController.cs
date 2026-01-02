@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 //using System.Diagnostics;
 using TMPro;
+using TreeEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -49,6 +50,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float scrollSpeed = 1f;
 
     private bool isWallJumping = false;
+    private BoxCollider boxCollider;
+    private float pushForce = 20f;
 
 
 
@@ -76,6 +79,7 @@ public class PlayerController : MonoBehaviour
 
         sensitivitySlider.value = sensitivity;
         sensitivityText.text = sensitivity.ToString();
+        boxCollider = this.GetComponent<BoxCollider>();
     }
 
 
@@ -358,17 +362,23 @@ void FixedUpdate()
                 HitTarget(hit.point);
                 if (hit.transform.TryGetComponent<Actor>(out Actor T))
                 {
-                    if (speedMultiplier < 5)
-                    {
-                        speedMultiplier++;
-                    }                    
-                    T.TakeDamage(attackDamage);
-                    timeSinceLastDecrement = 0f;
+                    DamageObject(T, 0);
                     break;
                 }
             }
         }        
     }
+
+    private void DamageObject(Actor actor, int type)
+    {
+        if (speedMultiplier < 5)
+        {
+            speedMultiplier++;
+        }
+        actor.TakeDamage(attackDamage, type);
+        timeSinceLastDecrement = 0f;
+    }
+
 
     void HitTarget(Vector3 pos)
     {
@@ -415,7 +425,26 @@ void FixedUpdate()
             case "ResetSpeed":
                 speedMultiplier = 1;
                 break;
+            case "EnemyHead":
+                Debug.Log("Colision");
+                if (other.transform.GetComponentInParent<Actor>())
+                {
+                    Debug.Log("Yippe!");
+                    DamageObject(other.transform.GetComponentInParent<Actor>(), 1);
+                    StartCoroutine(PushPlayerForward());
+                }
+                break;
         }
+    }
+
+    private IEnumerator PushPlayerForward()
+    {
+        Vector3 originalPlayerVelocity = _PlayerVelocity;
+        Vector3 forwardVelocity = transform.forward * pushForce + transform.up * (pushForce * 0.5f);
+        _PlayerVelocity = forwardVelocity;
+        yield return new WaitForSeconds(0.5f);
+        _PlayerVelocity.x = originalPlayerVelocity.x;
+        _PlayerVelocity.z = originalPlayerVelocity.z;
     }
 
     private void OnTriggerExit(Collider other)
