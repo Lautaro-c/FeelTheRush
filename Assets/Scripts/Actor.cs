@@ -12,6 +12,7 @@ public class Actor : MonoBehaviour
     private Animator enemyAnimator;
     private Transform cameraTransform;
     private float force = 50f;
+    private float upForce = 10f;
     private Rigidbody enemyRb;
     private CapsuleCollider enemyCc;
     // 0 = normal || 1 = Goomba
@@ -82,6 +83,16 @@ public class Actor : MonoBehaviour
                     enemyRb.AddForce(shootDirection.normalized * force, ForceMode.Impulse);
                 }
                 break;
+        }
+    }
+
+    public void SendEnemyFlyingUp()
+    {
+        if (enemyRb != null && enemyCc != null)
+        {
+            enemyRb.useGravity = true;
+            Vector3 shootDirection = transform.up;
+            enemyRb.AddForce(shootDirection.normalized * upForce, ForceMode.Impulse);
         }
     }
 

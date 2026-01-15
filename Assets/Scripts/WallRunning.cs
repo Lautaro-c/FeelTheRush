@@ -79,10 +79,6 @@ public class WallRunning : MonoBehaviour
         }
         if (pm.isGrounded)
         {
-            // Resetear la velocidad horizontal al aterrizar
-            pm._PlayerVelocity.x = 0f;
-            pm._PlayerVelocity.z = 0f;
-
             if (!Input.GetButton("Jump"))
             {
                 pm._PlayerVelocity.y = -1f; // pequeña fuerza hacia abajo para mantener contacto

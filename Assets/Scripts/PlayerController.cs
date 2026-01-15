@@ -2,8 +2,10 @@
 //using System.Diagnostics;
 using TMPro;
 using TreeEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static UnityEngine.LightAnchor;
@@ -15,10 +17,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private Slider sensitivitySlider;
     [SerializeField] private TMP_InputField sensitivityText;
+    [SerializeField] private PlayerLegs playerLegs;
 
     public bool gameIsPaused = false;
     public bool canMove = true;
-    private bool isMoving;
     public bool hasWon = false;
     public float SpeedMultiplier => speedMultiplier;
     PlayerInput playerInput;
@@ -50,8 +52,24 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float scrollSpeed = 1f;
 
     private bool isWallJumping = false;
-    private BoxCollider boxCollider;
     private float pushForce = 20f;
+
+    private float crouchHeight = 0.5f;
+    private float startHeight = 2f;
+
+    private Vector3 moveDirection;
+
+    private float maxSlopeAngle = 40f;
+    private RaycastHit slopeHit;
+
+    [Header("Sliding")]
+    [SerializeField] private Transform orientation;
+    [SerializeField] private float maxSlideTime;
+    [SerializeField] private float slideForce;
+    public KeyCode slideKey = KeyCode.LeftShift;
+    private float horizontalInput;
+    private float verticalInput;
+    private bool sliding;
 
 
 
@@ -79,16 +97,17 @@ public class PlayerController : MonoBehaviour
 
         sensitivitySlider.value = sensitivity;
         sensitivityText.text = sensitivity.ToString();
-        boxCollider = this.GetComponent<BoxCollider>();
+        sliding = false;
     }
-
 
     void Update()
     {
         isGrounded = controller.isGrounded;
+        horizontalInput = Input.GetAxisRaw("Horizontal");
+        verticalInput = Input.GetAxisRaw("Vertical");
 
         // Repeat Inputs
-        if(input.Attack.IsPressed())
+        if (input.Attack.IsPressed())
         { 
             Attack(); 
         }
@@ -119,6 +138,22 @@ public class PlayerController : MonoBehaviour
             }
         }
         SpeedEffect();
+        if (Input.GetKeyDown(slideKey) && (horizontalInput != 0 || verticalInput != 0) && !sliding)
+        {
+            StartSlide();
+        }
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            Debug.Log("Button pressed");
+            if (controller.height == startHeight)
+            {
+                controller.height = crouchHeight;
+            }
+            else
+            {
+                controller.height = startHeight;
+            }
+        }
     }
 
     private void SpeedEffect()
@@ -138,7 +173,7 @@ public class PlayerController : MonoBehaviour
 
 void FixedUpdate() 
     { 
-        MoveInput(input.Movement.ReadValue<Vector2>()); 
+        MoveInput(input.Movement.ReadValue<Vector2>());
         if (!isGrounded)
         {
             coyoteTiming += Time.deltaTime;
@@ -162,27 +197,59 @@ void FixedUpdate()
     {
         if (canMove)
         {
-            if (!isWallJumping)
-            {
-                Vector3 moveDirection = Vector3.zero;
-                moveDirection.x = input.x;
-                moveDirection.z = input.y;
-                isMoving = moveDirection.magnitude > 0.1f;
-                moveSpeed = 6.25f + (speedMultiplier * 3.75f);
-                controller.Move(transform.TransformDirection(moveDirection) * moveSpeed * Time.deltaTime);
-            }
             _PlayerVelocity.y += gravity * Time.deltaTime;
             if (isGrounded && _PlayerVelocity.y < 0)
             {
                 _PlayerVelocity.y = -2f;
             }
+            if (OnSlope())
+            {
+                controller.Move(_PlayerVelocity * Time.deltaTime);
+            }
+            if (!isWallJumping || !sliding)
+            {
+                moveDirection = Vector3.zero;
+                moveDirection.x = input.x;
+                moveDirection.z = input.y;
+                moveSpeed = 6.25f + (speedMultiplier * 3.75f);
+                controller.Move(transform.TransformDirection(moveDirection) * moveSpeed * Time.deltaTime);
+            }
             controller.Move(_PlayerVelocity * Time.deltaTime);
         }
-        else
-        {
-            isMoving = false;
-        }
     }
+
+    private bool OnSlope()
+    {
+        if(Physics.Raycast(transform.position, Vector3.down, out slopeHit, controller.height * 0.5f + 0.3f))
+        {
+            float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
+            return angle < maxSlopeAngle && angle != 0;
+        }
+        return false;
+    }
+
+    private void StartSlide()
+    {
+        controller.height = crouchHeight;
+        playerLegs.SpawnLegs();
+        StartCoroutine(SlidingMovement());
+    }
+
+    private IEnumerator SlidingMovement()
+    {
+        Vector3 originalPlayerVelocity = _PlayerVelocity;
+        sliding = true;
+        Vector3 inputDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+        Vector3 forwardVelocity = inputDirection.normalized * slideForce;
+        forwardVelocity.y = _PlayerVelocity.y;
+        _PlayerVelocity += forwardVelocity;
+        yield return new WaitForSeconds(maxSlideTime);
+        _PlayerVelocity = originalPlayerVelocity;
+        controller.height = startHeight;
+        sliding = false;
+        playerLegs.DeSpawnLegs();
+    }
+
     void LookInput(Vector2 input)
     {
         if (!canMove) return;
@@ -264,8 +331,8 @@ void FixedUpdate()
     {
         // If player is not attacking
         if(!attacking)
-        {
-            if(_PlayerVelocity.x == 0 &&_PlayerVelocity.z == 0)
+        { 
+            if (input.Movement.ReadValue<Vector2>().x == 0 && input.Movement.ReadValue<Vector2>().y == 0)
             { ChangeAnimationState(IDLE); }
             else
             { ChangeAnimationState(WALK); }
@@ -426,25 +493,27 @@ void FixedUpdate()
                 speedMultiplier = 1;
                 break;
             case "EnemyHead":
-                Debug.Log("Colision");
                 if (other.transform.GetComponentInParent<Actor>())
                 {
-                    Debug.Log("Yippe!");
-                    DamageObject(other.transform.GetComponentInParent<Actor>(), 1);
-                    StartCoroutine(PushPlayerForward());
+                    EnemyHeadKill(other.gameObject);
                 }
                 break;
         }
     }
 
+    public void EnemyHeadKill(GameObject other)
+    {
+        DamageObject(other.transform.GetComponentInParent<Actor>(), 1);
+        StartCoroutine(PushPlayerForward());
+    }
+
     private IEnumerator PushPlayerForward()
     {
-        Vector3 originalPlayerVelocity = _PlayerVelocity;
         Vector3 forwardVelocity = transform.forward * pushForce + transform.up * (pushForce * 0.5f);
         _PlayerVelocity = forwardVelocity;
         yield return new WaitForSeconds(0.5f);
-        _PlayerVelocity.x = originalPlayerVelocity.x;
-        _PlayerVelocity.z = originalPlayerVelocity.z;
+        _PlayerVelocity.x = 0;
+        _PlayerVelocity.z = 0;
     }
 
     private void OnTriggerExit(Collider other)
