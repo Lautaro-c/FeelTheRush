@@ -21,7 +21,7 @@ TagManager:
   - Hittable
   - Ground
   - Wall
-  - 
+  - Player
   - 
   - 
   - 

@@ -48,8 +48,6 @@ public class PlayerController : MonoBehaviour
     private float coyoteTiming = 0f;
 
     [SerializeField] TutorialManager tutorialManager;
-    [SerializeField] private Renderer speedEffectRenderer;
-    [SerializeField] private float scrollSpeed = 1f;
 
     private bool isWallJumping = false;
     private float pushForce = 20f;
@@ -70,6 +68,8 @@ public class PlayerController : MonoBehaviour
     private float horizontalInput;
     private float verticalInput;
     private bool sliding;
+
+    [SerializeField] private ParticleSystemClearer particleSystemClearer;
 
 
 
@@ -127,17 +127,17 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.R))
         {
-            SceneManager.LoadScene(1);
+            OnDeath();
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (!hasWon)
             {
+                particleSystemClearer.ClearAllParticles();
                 StopGame();
             }
         }
-        SpeedEffect();
         if (Input.GetKeyDown(slideKey) && (horizontalInput != 0 || verticalInput != 0) && !sliding)
         {
             StartSlide();
@@ -156,20 +156,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void SpeedEffect()
+    private void OnDeath()
     {
-        if (speedMultiplier >= 2)
-        {
-            speedEffectRenderer.enabled = true;
-
-            float offset = Time.time * scrollSpeed * speedMultiplier;
-            speedEffectRenderer.material.SetTextureOffset("_MainTex", new Vector2(0, offset));
-        }
-        else
-        {
-            speedEffectRenderer.enabled = false;
-        }
+        SceneManager.LoadScene(1);
     }
+
 
 void FixedUpdate() 
     { 
@@ -362,6 +353,18 @@ void FixedUpdate()
     public float decrementInterval = 3f;
     public float timeSinceLastDecrement = 0f;
 
+    public void RecieveDamage()
+    {
+        SpeedMultiplierDecrement();
+        timeSinceLastDecrement = 0f;
+        //efectos de sonido/visuales para dano 
+        if (speedMultiplier <= 0)
+        {
+            Debug.Log("Me mori");
+            OnDeath();
+            //efectos de sonido para muerte
+        }
+    }
 
     public void Attack()
     {
@@ -431,6 +434,15 @@ void FixedUpdate()
                 {
                     DamageObject(T, 0);
                     break;
+                }
+                if (hit.transform.TryGetComponent<Projectile>(out Projectile J))
+                {
+                    if (speedMultiplier < 5)
+                    {
+                        speedMultiplier++;
+                    }
+                    J.Parried();
+                    timeSinceLastDecrement = 0f;
                 }
             }
         }        

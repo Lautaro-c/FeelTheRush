@@ -9,14 +9,17 @@ public class Actor : MonoBehaviour
     int currentHealth;
     public int maxHealth;
     public event Action OnDie;
-    private Animator enemyAnimator;
+    [SerializeField] private Animator enemyAnimator;
     private Transform cameraTransform;
     private float force = 50f;
     private float upForce = 10f;
     private Rigidbody enemyRb;
-    private CapsuleCollider enemyCc;
-    // 0 = normal || 1 = Goomba
+    private Collider enemyCc;
+    // 0 = normal || 1 = Goomba || 2 = explosion
     private int killType = 0; 
+    private EnemyAI enemyAI;
+    [SerializeField] GameObject explosionPrefab;
+    private GameObject headCollider;
 
     void Awake()
     {
@@ -27,10 +30,13 @@ public class Actor : MonoBehaviour
 
     private void Start()
     {
-        enemyAnimator = GetComponentInChildren<Animator>();
+        //enemyAnimator = GetComponentInChildren<Animator>();
         cameraTransform = GameObject.Find("Main Camera").transform;
         enemyRb = this.GetComponent<Rigidbody>();
-        enemyCc = this.GetComponent<CapsuleCollider>();
+        enemyCc = this.GetComponent<Collider>();
+        enemyAI = this.GetComponent<EnemyAI>();
+        OnDie += enemyAI.EnemyDied;
+        headCollider = this.transform.Find("HeadCollider").gameObject; 
     }
 
     public void TakeDamage(int amount, int AttackType)
@@ -46,8 +52,12 @@ public class Actor : MonoBehaviour
     void Death()
     {
         ScoreManager.Instance?.RegisterKill();
+        headCollider.SetActive(false);
         OnDie.Invoke();
-        StartCoroutine(WaitToDestroy());
+        if (killType != 2)
+        {
+            StartCoroutine(WaitToDestroy());
+        }
     }
 
     private IEnumerator WaitToDestroy()
@@ -73,7 +83,7 @@ public class Actor : MonoBehaviour
                     Vector3 shootDirection = cameraTransform.forward;
                     enemyRb.AddForce(shootDirection.normalized * force, ForceMode.Impulse);
                 }
-                break;
+            break;
             case 1:
                 if (enemyRb != null && enemyCc != null)
                 {
@@ -82,7 +92,11 @@ public class Actor : MonoBehaviour
                     Vector3 shootDirection = -transform.up;
                     enemyRb.AddForce(shootDirection.normalized * force, ForceMode.Impulse);
                 }
-                break;
+            break;
+            case 2:
+                Instantiate(explosionPrefab,transform.position, transform.rotation);
+                DestroyEnemy();
+            break;
         }
     }
 
@@ -119,6 +133,8 @@ public class Actor : MonoBehaviour
             enemyAnimator.ResetTrigger("EnemyDied");
         }
         transform.position = originalPosition;
+        enemyAI.EnemyRevived();
+        headCollider.SetActive(true);
         gameObject.SetActive(true);
     }
 }

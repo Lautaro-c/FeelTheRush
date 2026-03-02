@@ -42,7 +42,6 @@ public class PlayerLegs : MonoBehaviour
         }
         if (!showLegs && !stopRotating)
         {
-            Debug.Log("Hola3");
             if (this.transform.localPosition.z > initialPosition.z)
             {
                 this.transform.localPosition = new Vector3(this.transform.localPosition.x, this.transform.localPosition.y, this.transform.localPosition.z - (spawnSpeed * Time.deltaTime));
@@ -53,7 +52,6 @@ public class PlayerLegs : MonoBehaviour
             }
             else
             {
-                Debug.Log("Hola2");
                 meshRenderer.enabled = false;
                 this.transform.localPosition = initialPosition;
                 playerArms.transform.localRotation = Quaternion.Euler(playerArms.transform.localEulerAngles.x, playerArms.transform.localEulerAngles.y, 0);
