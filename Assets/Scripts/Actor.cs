@@ -20,6 +20,9 @@ public class Actor : MonoBehaviour
     private EnemyAI enemyAI;
     [SerializeField] GameObject explosionPrefab;
     private GameObject headCollider;
+    private AudioManager audioManager;
+    private AudioSource audioSource;
+
 
     void Awake()
     {
@@ -37,6 +40,8 @@ public class Actor : MonoBehaviour
         enemyAI = this.GetComponent<EnemyAI>();
         OnDie += enemyAI.EnemyDied;
         headCollider = this.transform.Find("HeadCollider").gameObject; 
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+        audioSource = this.GetComponent<AudioSource>();
     }
 
     public void TakeDamage(int amount, int AttackType)
@@ -108,6 +113,11 @@ public class Actor : MonoBehaviour
             Vector3 shootDirection = transform.up;
             enemyRb.AddForce(shootDirection.normalized * upForce, ForceMode.Impulse);
         }
+    }
+
+    private void PlayAudioClip(AudioClip audioClip)
+    {
+        audioSource.PlayOneShot(audioClip);
     }
 
     private void DestroyEnemy()

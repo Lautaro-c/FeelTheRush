@@ -23,12 +23,17 @@ public class AlienAI : EnemyAI
     [SerializeField] private bool playerInSightRange;
     [SerializeField] private bool playerInAttackRange;
 
+    private AudioManager audioManager;
+    private AudioSource audioSource;
+
     private void Start()
     {
         player = GameObject.Find("Player").transform;
         agent = GetComponent<NavMeshAgent>();
         enemyAnimator = GetComponentInChildren<Animator>();
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
         enemyDead = false;
+        audioSource = this.GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -64,6 +69,7 @@ public class AlienAI : EnemyAI
         if (!enemyJustSeen)
         {
             enemyAnimator.SetTrigger("PlayerSeen");
+            PlayAudioClip(audioManager.alienScream);
             Invoke(nameof(EndScreamAnimation), screamTime);
         }
         else
@@ -81,12 +87,12 @@ public class AlienAI : EnemyAI
     public override void AttackPlayer()
     {
         enemyAnimator.SetBool("StartChasing", false);
-        transform.LookAt(player);
         agent.SetDestination(transform.position);
 
         if (!alreadyAttacked)
         {
             //Attack code
+            PlayAudioClip(audioManager.alienKick);
             enemyAnimator.SetTrigger("AttackPlayer");
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), timeBetweenAttacks);
@@ -101,11 +107,31 @@ public class AlienAI : EnemyAI
 
     public override void EnemyDied()
     {
+        playerInSightRange = false;
+        playerInAttackRange = false;
+        transform.Find("AttackCollider").gameObject.SetActive(false);
         enemyDead = true;
     }
 
     public override void EnemyRevived()
     {
         enemyDead = false;
+        transform.Find("AttackCollider").gameObject.SetActive(false);
+        playerInSightRange = false;
+        playerInAttackRange = false;
     }
+
+    private void PlayAudioClip(AudioClip audioClip)
+    {
+        if (audioClip == audioManager.alienScream)
+        {
+            audioSource.volume = 0.1f;
+        }
+        else
+        {
+            audioSource.volume = 1f;
+        }
+        audioSource.PlayOneShot(audioClip);
+    }
+
 }

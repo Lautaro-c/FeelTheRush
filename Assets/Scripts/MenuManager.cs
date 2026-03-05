@@ -16,6 +16,14 @@ public class MenuManager : MonoBehaviour
 
         principalCanvas.enabled = true;
         creditsCanvas.enabled = false;
+        if (PlayerPrefs.HasKey("lastLvlPlayed"))
+        {
+            lastLvlPlayed = PlayerPrefs.GetInt("lastLvlPlayed");
+        }
+        else
+        {
+            PlayerPrefs.SetInt("lastLvlPlayed", 0);
+        }
     }
 
     public void GoToLvl(int lvlIndex)

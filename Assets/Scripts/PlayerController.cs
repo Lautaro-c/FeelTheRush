@@ -1,14 +1,10 @@
 ﻿using System.Collections;
 //using System.Diagnostics;
 using TMPro;
-using TreeEditor;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using static UnityEngine.LightAnchor;
 
 public class PlayerController : MonoBehaviour
 {
@@ -71,7 +67,14 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private ParticleSystemClearer particleSystemClearer;
 
+    private AudioManager audioManager;
 
+    [Header("Damage Effect")]
+    [SerializeField] private Image DamageImage;
+    [SerializeField] private float duration;
+    [SerializeField] private float fadeSpeed;
+    private float durationTimer;
+    [SerializeField] private FallingReset fallingReset;
 
     void Awake()
     { 
@@ -91,13 +94,12 @@ public class PlayerController : MonoBehaviour
     {
         OnLeftClick = new UnityEvent();
         OnLeftClick.AddListener(Attack);
-
         sensitivity = PlayerPrefs.GetFloat("Sensitivity", 0.3f);
-
-
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
         sensitivitySlider.value = sensitivity;
         sensitivityText.text = sensitivity.ToString();
         sliding = false;
+        DamageImage.color = new Color(DamageImage.color.r, DamageImage.color.g, DamageImage.color.b, 0);
     }
 
     void Update()
@@ -127,7 +129,8 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.R))
         {
-            OnDeath();
+            Collider collider = this.GetComponent<Collider>();
+            fallingReset.Restart(collider);
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -154,15 +157,21 @@ public class PlayerController : MonoBehaviour
                 controller.height = startHeight;
             }
         }
+
+        if(DamageImage.color.a > 0)
+        {
+            durationTimer += Time.deltaTime;
+            if(durationTimer >= duration)
+            {
+                float tempAlpha = DamageImage.color.a;
+                tempAlpha -= Time.deltaTime * fadeSpeed;
+                DamageImage.color = new Color(DamageImage.color.r, DamageImage.color.g, DamageImage.color.b, tempAlpha);
+            }
+        }
     }
 
-    private void OnDeath()
-    {
-        SceneManager.LoadScene(1);
-    }
 
-
-void FixedUpdate() 
+    void FixedUpdate() 
     { 
         MoveInput(input.Movement.ReadValue<Vector2>());
         if (!isGrounded)
@@ -275,9 +284,15 @@ void FixedUpdate()
         {
             if (isGrounded || coyoteTiming < 0.2f)
             {
+                PlayAudioClip(audioManager.jump);
                 _PlayerVelocity.y = Mathf.Sqrt(jumpHeight * -3.0f * gravity);
             }
         }
+    }
+
+    private void PlayAudioClip(AudioClip audioClip)
+    {
+        audioSource.PlayOneShot(audioClip);
     }
 
     public IEnumerator StartWallJump(Vector3 jumpDirection)
@@ -353,15 +368,22 @@ void FixedUpdate()
     public float decrementInterval = 3f;
     public float timeSinceLastDecrement = 0f;
 
+  
+
+
     public void RecieveDamage()
     {
+        PlayAudioClip(audioManager.receiveDamage);
+        DamageImage.color = new Color(DamageImage.color.r, DamageImage.color.g, DamageImage.color.b, 1f);
+        durationTimer = 0;
         SpeedMultiplierDecrement();
         timeSinceLastDecrement = 0f;
         //efectos de sonido/visuales para dano 
         if (speedMultiplier <= 0)
         {
             Debug.Log("Me mori");
-            OnDeath();
+            Collider collider = this.GetComponent<Collider>();
+            fallingReset.Restart(collider);
             //efectos de sonido para muerte
         }
     }
@@ -432,6 +454,7 @@ void FixedUpdate()
                 HitTarget(hit.point);
                 if (hit.transform.TryGetComponent<Actor>(out Actor T))
                 {
+                    PlayAudioClip(audioManager.aliensDeath);
                     DamageObject(T, 0);
                     break;
                 }
@@ -455,6 +478,7 @@ void FixedUpdate()
             speedMultiplier++;
         }
         actor.TakeDamage(attackDamage, type);
+
         timeSinceLastDecrement = 0f;
     }
 

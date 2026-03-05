@@ -34,6 +34,8 @@ public class UFOAI : EnemyAI
     [SerializeField] private Transform spawnPos;
     public bool idle;
     
+    private AudioManager audioManager;
+    private AudioSource audioSource;
 
 
 
@@ -41,7 +43,9 @@ public class UFOAI : EnemyAI
     {
         player = GameObject.Find("Player").transform;
         enemyAnimator = transform.GetComponentInChildren<Animator>();
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
         enemyDead = false;
+        audioSource = this.GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -137,8 +141,14 @@ public class UFOAI : EnemyAI
 
     }
 
+    private void PlayAudioClip(AudioClip audioClip)
+    {
+        audioSource.PlayOneShot(audioClip);
+    }
+
     public void Shoot()
     {
+        PlayAudioClip(audioManager.ufoShoot);
         Vector3 direction = (player.position - spawnPos.position).normalized;
         GameObject proj = projectilePool.GetProjectile(spawnPos.position, transform.rotation);
         proj.GetComponent<Projectile>().Init(projectilePool);
@@ -152,11 +162,15 @@ public class UFOAI : EnemyAI
 
     public override void EnemyDied()
     {
+        playerInSightRange = false;
+        playerInAttackRange = false;
         enemyDead = true;
     }
 
     public override void EnemyRevived()
     {
+        playerInSightRange = false;
+        playerInAttackRange = false;
         enemyDead = false;
     }
 }

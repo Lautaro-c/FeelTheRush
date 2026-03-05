@@ -14,6 +14,8 @@ public class ScoreManager : MonoBehaviour
     public TMP_Text TimeText;
     public TMP_Text EnemiesText;
     [SerializeField] private GameObject panel;
+    private int score;
+    [SerializeField] private int AllAliens;
 
     public float TimeElapsed => Time.time - levelStartTime;
     public int EnemiesKilled => enemiesKilled;
@@ -40,23 +42,33 @@ public class ScoreManager : MonoBehaviour
         enemiesKilled++;
     }
 
+    public void ReceiveAllEnemies(int allEnemies)
+    {
+        AllAliens = allEnemies;
+    }
+
     public void EndLevel()
     {
         float finalTime = TimeElapsed;
         int totalKills = enemiesKilled;
-        int score = (totalKills * 100) + Mathf.Max(0, (int)(1000 - finalTime * 10));
+        score = (totalKills * 100) + Mathf.Max(0, (int)(1000 - finalTime * 10));
         panel.SetActive(true);
         ScoreText.text = score.ToString();
         TimeText.text = finalTime.ToString("F2");
-        EnemiesText.text = totalKills.ToString();
+        EnemiesText.text = totalKills.ToString() + "/" + AllAliens.ToString();
+        SaveData();
     }
-    /*private void OnTriggerEnter(Collider other)
+
+    private void SaveData()
     {
-        if (other.CompareTag("Player"))
+        int sceneID = SceneManager.GetActiveScene().buildIndex;
+        if (PlayerPrefs.GetInt($"lvl{sceneID}Score") <= score)
         {
-            playerController.canMove = false;
-            EndLevel();
-            managerUI.winScreen();
+            PlayerPrefs.SetInt($"lvl{sceneID}Kills", enemiesKilled);
+            PlayerPrefs.SetInt($"lvl{sceneID}Aliens", AllAliens);
+            PlayerPrefs.SetFloat($"lvl{sceneID}Time", TimeElapsed);
+            PlayerPrefs.SetInt($"lvl{sceneID}Score", score);
         }
-    }*/
+        PlayerPrefs.SetInt("lastLvlPlayed", sceneID);
+    }
 }

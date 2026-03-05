@@ -4,12 +4,21 @@ using UnityEngine.Events;
 public class Meta : MonoBehaviour
 {
     public UnityEvent OnWin;
+    [SerializeField] private int allEnemies;
 
     private void Start()
     {
         if (OnWin == null)
         {
             OnWin = new UnityEvent();
+        }
+        if (ScoreManager.Instance != null)
+        {
+            ScoreManager.Instance.ReceiveAllEnemies(allEnemies);
+        }
+        else
+        {
+            Debug.Log("No existe score manager");
         }
         OnWin.AddListener(TriggerWinSequence);
     }
