@@ -107,7 +107,6 @@ public class PlayerController : MonoBehaviour
         isGrounded = controller.isGrounded;
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
-
         // Repeat Inputs
         if (input.Attack.IsPressed())
         { 
@@ -130,7 +129,8 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
         {
             Collider collider = this.GetComponent<Collider>();
-            fallingReset.Restart(collider);
+            fallingReset.Restart(collider); 
+            _PlayerVelocity = Vector3.zero;
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -141,7 +141,7 @@ public class PlayerController : MonoBehaviour
                 StopGame();
             }
         }
-        if (Input.GetKeyDown(slideKey) && (horizontalInput != 0 || verticalInput != 0) && !sliding)
+        if (Input.GetKeyDown(slideKey) && (horizontalInput != 0 || verticalInput != 0) && !sliding && !isWallJumping)
         {
             StartSlide();
         }
@@ -244,7 +244,8 @@ public class PlayerController : MonoBehaviour
         forwardVelocity.y = _PlayerVelocity.y;
         _PlayerVelocity += forwardVelocity;
         yield return new WaitForSeconds(maxSlideTime);
-        _PlayerVelocity = originalPlayerVelocity;
+        _PlayerVelocity.x = 0;
+        _PlayerVelocity.z = 0;
         controller.height = startHeight;
         sliding = false;
         playerLegs.DeSpawnLegs();
@@ -301,8 +302,8 @@ public class PlayerController : MonoBehaviour
         Vector3 originalPlayerVelocity = _PlayerVelocity;
         _PlayerVelocity = jumpDirection;
         yield return new WaitForSeconds(0.5f);
-        _PlayerVelocity.x = originalPlayerVelocity.x;
-        _PlayerVelocity.z = originalPlayerVelocity.z;
+        _PlayerVelocity.x = 0;
+        _PlayerVelocity.z = 0;
         isWallJumping = false;
     }
 
@@ -381,9 +382,9 @@ public class PlayerController : MonoBehaviour
         //efectos de sonido/visuales para dano 
         if (speedMultiplier <= 0)
         {
-            Debug.Log("Me mori");
             Collider collider = this.GetComponent<Collider>();
             fallingReset.Restart(collider);
+            _PlayerVelocity = Vector3.zero;
             //efectos de sonido para muerte
         }
     }
@@ -528,6 +529,18 @@ public class PlayerController : MonoBehaviour
             case "ResetSpeed":
                 speedMultiplier = 1;
                 break;
+            case "SpeedMultiplier":
+                tutorialManager.OnPlayerSpeedMultiplier();
+                break;
+            case "Parry":
+                tutorialManager.OnPlayerParry();
+                break;
+            case "RKey":
+                tutorialManager.OnRKey();
+                break;
+            case "JumpKill":
+                tutorialManager.OnJumpKill();
+                break;
             case "EnemyHead":
                 if (other.transform.GetComponentInParent<Actor>())
                 {
@@ -540,6 +553,7 @@ public class PlayerController : MonoBehaviour
     public void EnemyHeadKill(GameObject other)
     {
         DamageObject(other.transform.GetComponentInParent<Actor>(), 1);
+        PlayAudioClip(audioManager.jumpOnEnemies);
         StartCoroutine(PushPlayerForward());
     }
 
@@ -554,7 +568,10 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        tutorialManager.Desactivate();
+        if(tutorialManager != null)
+        {
+            tutorialManager.Desactivate();
+        }
     }
 
     public void FreeTheMouse()

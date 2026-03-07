@@ -27,7 +27,37 @@ public class TutorialManager : MonoBehaviour
     public void OnPlayerAttackEnemy()
     {
         HidePanel(2);
+        HidePanel(7);
         ShowPanel(3);
+    }
+
+    public void OnPlayerSpeedMultiplier()
+    {
+        HidePanel(3);
+        ShowPanel(4);
+    }
+
+    public void OnPlayerSlide()
+    {
+        HidePanel(4);
+        ShowPanel(5);
+    }
+
+    public void OnPlayerParry()
+    {
+        HidePanel(5);
+        ShowPanel(6);
+    }
+
+    public void OnRKey()
+    {
+        HidePanel(1);
+        ShowPanel(7);
+    }
+
+    public void OnJumpKill()
+    {
+        ShowPanel(0);
     }
 
     public void Desactivate()
@@ -36,15 +66,32 @@ public class TutorialManager : MonoBehaviour
         HidePanel(1);
         HidePanel(2);
         HidePanel(3);
+        HidePanel(4);
+        HidePanel(5);
+        HidePanel(6);
     }
 
     void ShowPanel(int index)
     {
-        tutorialPanels[index].SetActive(true);
+        if (index < tutorialPanels.Length)
+        {
+            if (tutorialPanels[index] != null)
+            {
+                tutorialPanels[index].SetActive(true);
+            }
+        }
     }
 
     void HidePanel(int index)
     {
-        tutorialPanels[index].SetActive(false);
+        if (index < tutorialPanels.Length)
+        {
+            {
+                if (tutorialPanels[index] != null)
+                {
+                    tutorialPanels[index].SetActive(false);
+                }
+            }
+        }
     }
 }

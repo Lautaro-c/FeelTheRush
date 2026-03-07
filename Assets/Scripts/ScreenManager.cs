@@ -23,7 +23,7 @@ public class ScreenManager : MonoBehaviour
         }
         else
         {
-            screenToggle.isOn = false;
+            screenToggle.isOn = true;
             SetFullScreen();
         }
     }

@@ -65,17 +65,15 @@ public class UFOAI : EnemyAI
                 idle = true;
                 enemyJustSeen = false;
             }
-            else
-            {
-                idle = false;
-            }
             if (playerInSightRange && !playerInAttackRange)
             {
                 ChasePlayer();
+                idle = false;
             }
             if (playerInSightRange && playerInAttackRange)
             {
                 AttackPlayer();
+                idle = false;
             }
         }
     }
@@ -92,7 +90,6 @@ public class UFOAI : EnemyAI
         else
         {
             enemyAnimator.SetBool("StartChasing", true);
-
             // Dirección hacia el jugador
             Vector3 direction = (player.position - this.transform.position).normalized;
             direction = AvoidObstacles(direction);
@@ -167,8 +164,9 @@ public class UFOAI : EnemyAI
         enemyDead = true;
     }
 
-    public override void EnemyRevived()
+    public override void EnemyRevived(Vector3 originalPos)
     {
+        transform.position = originalPos;
         playerInSightRange = false;
         playerInAttackRange = false;
         enemyDead = false;

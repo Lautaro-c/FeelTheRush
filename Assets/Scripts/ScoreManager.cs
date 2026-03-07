@@ -37,6 +37,12 @@ public class ScoreManager : MonoBehaviour
         enemiesKilled = 0;
     }
 
+    public void Restart()
+    {
+        levelStartTime = Time.time;
+        enemiesKilled = 0;
+    }
+
     public void RegisterKill()
     {
         enemiesKilled++;
@@ -51,7 +57,7 @@ public class ScoreManager : MonoBehaviour
     {
         float finalTime = TimeElapsed;
         int totalKills = enemiesKilled;
-        score = (totalKills * 100) + Mathf.Max(0, (int)(1000 - finalTime * 10));
+        score = (Mathf.Max(0, (int)(10000 - finalTime * 10)) + 1) * ((totalKills * 10) + 1);
         panel.SetActive(true);
         ScoreText.text = score.ToString();
         TimeText.text = finalTime.ToString("F2");
@@ -69,6 +75,9 @@ public class ScoreManager : MonoBehaviour
             PlayerPrefs.SetFloat($"lvl{sceneID}Time", TimeElapsed);
             PlayerPrefs.SetInt($"lvl{sceneID}Score", score);
         }
-        PlayerPrefs.SetInt("lastLvlPlayed", sceneID);
+        if(PlayerPrefs.GetInt("lastLvlPlayed") <= sceneID)
+        {
+            PlayerPrefs.SetInt("lastLvlPlayed", sceneID);
+        }
     }
 }

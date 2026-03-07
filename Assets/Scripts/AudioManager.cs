@@ -19,6 +19,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] public AudioClip clicButton;
     [SerializeField] public AudioClip clickCancel;
     [SerializeField] public AudioClip Victory;
+    [SerializeField] public AudioClip jumpOnEnemies;
 
     [Header("--------Audio Volume--------")]
     [SerializeField] private float musicVolume;

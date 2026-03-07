@@ -142,8 +142,10 @@ public class Actor : MonoBehaviour
         {
             enemyAnimator.ResetTrigger("EnemyDied");
         }
+        enemyAnimator.Rebind();
+        enemyAnimator.Update(0f);
+        enemyAI.EnemyRevived(originalPosition);
         transform.position = originalPosition;
-        enemyAI.EnemyRevived();
         headCollider.SetActive(true);
         gameObject.SetActive(true);
     }

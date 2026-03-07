@@ -12,13 +12,14 @@ public class FallingReset : MonoBehaviour
     {
         if (other != null && other.gameObject.GetComponent<PlayerController>())
         {
+            other.gameObject.GetComponent<PlayerController>()._PlayerVelocity = Vector3.zero;
             Restart(other);
         }
     }
 
     public void Restart(Collider other)
     {
-        ScoreManager.Instance.enemiesKilled = 0;
+        ScoreManager.Instance.Restart();
         for (int i = 0; i < actorsToRestart.Count; i++)
         {
             actorsToRestart[i].gameObject.SetActive(true);

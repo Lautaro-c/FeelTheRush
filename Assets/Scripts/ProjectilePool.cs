@@ -26,6 +26,9 @@ public class ProjectilePool : MonoBehaviour
             GameObject proj = pool.Dequeue();
             proj.transform.position = position;
             proj.transform.rotation = rotation * Quaternion.Euler(45f, 0f, 90f); 
+            Rigidbody rb = proj.GetComponent<Rigidbody>();
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
             proj.SetActive(true);
             return proj;
         }

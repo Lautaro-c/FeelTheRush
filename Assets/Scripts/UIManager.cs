@@ -79,6 +79,7 @@ public class UIManager : MonoBehaviour
     public void Retry()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene(1);
+        int activeScene = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(activeScene);
     }
 }

@@ -65,7 +65,8 @@ public class AlienAI : EnemyAI
 
     public override void ChasePlayer()
     {
-        transform.LookAt(player);
+        Vector3 playerDirection = new Vector3(player.position.x, transform.position.y, player.position.z);
+        transform.LookAt(playerDirection);
         if (!enemyJustSeen)
         {
             enemyAnimator.SetTrigger("PlayerSeen");
@@ -113,12 +114,13 @@ public class AlienAI : EnemyAI
         enemyDead = true;
     }
 
-    public override void EnemyRevived()
+    public override void EnemyRevived(Vector3 originalPos)
     {
-        enemyDead = false;
+        agent.SetDestination(originalPos);
         transform.Find("AttackCollider").gameObject.SetActive(false);
         playerInSightRange = false;
         playerInAttackRange = false;
+        enemyDead = false;
     }
 
     private void PlayAudioClip(AudioClip audioClip)

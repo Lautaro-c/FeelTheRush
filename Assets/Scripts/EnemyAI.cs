@@ -30,7 +30,7 @@ public class EnemyAI : MonoBehaviour
         
     }
 
-    public virtual void EnemyRevived()
+    public virtual void EnemyRevived(Vector3 originalPos)
     {
 
     }

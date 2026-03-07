@@ -13,6 +13,11 @@ TagManager:
   - EnemyHead
   - FxTemporaire
   - Audio
+  - SpeedMultiplier
+  - Slide
+  - Parry
+  - JumpKill
+  - RKey
   layers:
   - Default
   - TransparentFX
